@@ -1,167 +1,163 @@
 """
-Master Data Management Widgets
-FINAL FIX – aligned with model-based repository
+Master data repository for database operations
 """
+from typing import List, Optional
+from payroll_system.models.master_data import Department, Designation, Branch, Shift, Holiday
+from payroll_system.utils.database import db
+import logging
 
-from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QListWidget, QLineEdit,
-    QMessageBox, QFrame
-)
-from PySide6.QtCore import Qt
-from datetime import datetime
-from payroll_system.repository.master_data_repository import MasterDataRepository
-from payroll_system.models.master_data import Department, Designation, Branch
+logger = logging.getLogger(__name__)
 
-
-class MasterDataWidget(QWidget):
-
+class MasterDataRepository:
+    """Repository for master data operations"""
+    
     def __init__(self):
-        super().__init__()
-        self.repo = MasterDataRepository()
-        self.init_ui()
+        self.departments = db.get_db().departments
+        self.designations = db.get_db().designations
+        self.branches = db.get_db().branches
+        self.shifts = db.get_db().shifts
+        self.holidays = db.get_db().holidays
+    
+    # Department operations
+    def create_department(self, department: Department) -> bool:
+        try:
+            result = self.departments.insert_one(department.to_dict())
+            return result.inserted_id is not None
+        except Exception as e:
+            logger.error(f"Error creating department: {e}")
+            return False
+    
+    def get_all_departments(self) -> List[Department]:
+        try:
+            departments = []
+            for data in self.departments.find({'status': 1}):
+                departments.append(Department(
+                    department_id=data['department_id'],
+                    department_name=data['department_name'],
+                    created_date=data.get('created_date'),
+                    modified_date=data.get('modified_date'),
+                    status=data.get('status', 1)
+                ))
+            return departments
+        except Exception as e:
+            logger.error(f"Error getting departments: {e}")
+            return []
+    
+    # Designation operations
+    def create_designation(self, designation: Designation) -> bool:
+        try:
+            result = self.designations.insert_one(designation.to_dict())
+            return result.inserted_id is not None
+        except Exception as e:
+            logger.error(f"Error creating designation: {e}")
+            return False
+    
+    def get_all_designations(self) -> List[Designation]:
+        try:
+            designations = []
+            for data in self.designations.find({'status': 1}):
+                designations.append(Designation(
+                    designation_id=data['designation_id'],
+                    designation_name=data['designation_name'],
+                    department_name=data['department_name'],
+                    created_date=data.get('created_date'),
+                    modified_date=data.get('modified_date'),
+                    status=data.get('status', 1)
+                ))
+            return designations
+        except Exception as e:
+            logger.error(f"Error getting designations: {e}")
+            return []
+    
+    # Branch operations
+    def create_branch(self, branch: Branch) -> bool:
+        try:
+            result = self.branches.insert_one(branch.to_dict())
+            return result.inserted_id is not None
+        except Exception as e:
+            logger.error(f"Error creating branch: {e}")
+            return False
+    
+    def get_all_branches(self) -> List[Branch]:
+        try:
+            branches = []
+            for data in self.branches.find({'status': 1}):
+                branches.append(Branch(
+                    branch_id=data['branch_id'],
+                    name=data['name'],
+                    branch_address=data['branch_address'],
+                    phone_number=data['phone_number'],
+                    email=data['email'],
+                    establishment_date=data.get('establishment_date'),
+                    created_by=data.get('created_by', ''),
+                    created_date=data.get('created_date'),
+                    modified_date=data.get('modified_date'),
+                    status=data.get('status', 1)
+                ))
+            return branches
+        except Exception as e:
+            logger.error(f"Error getting branches: {e}")
+            return []
+    
+    # Shift operations
+    def create_shift(self, shift: Shift) -> bool:
+        try:
+            result = self.shifts.insert_one(shift.to_dict())
+            return result.inserted_id is not None
+        except Exception as e:
+            logger.error(f"Error creating shift: {e}")
+            return False
+    
+    def get_all_shifts(self) -> List[Shift]:
+        try:
+            shifts = []
+            for data in self.shifts.find({'status': 1}):
+                shifts.append(Shift(
+                    shift_id=data['shift_id'],
+                    shift_name=data['shift_name'],
+                    in_time=data['in_time'],
+                    out_time=data['out_time'],
+                    created_date=data.get('created_date'),
+                    modified_date=data.get('modified_date'),
+                    status=data.get('status', 1)
+                ))
+            return shifts
+        except Exception as e:
+            logger.error(f"Error getting shifts: {e}")
+            return []
+    
+    # Holiday operations
+    def create_holiday(self, holiday: Holiday) -> bool:
+        try:
+            result = self.holidays.insert_one(holiday.to_dict())
+            return result.inserted_id is not None
+        except Exception as e:
+            logger.error(f"Error creating holiday: {e}")
+            return False
+    
+    def get_all_holidays(self) -> List[Holiday]:
+        try:
+            holidays = []
+            for data in self.holidays.find({'status': 1}):
+                from datetime import datetime as dt
+                holiday_date = None
+                if data.get('holiday_date'):
+                    if isinstance(data['holiday_date'], str):
+                        holiday_date = dt.strptime(data['holiday_date'], '%Y-%m-%d').date()
+                    else:
+                        holiday_date = data['holiday_date']
+                
+                holidays.append(Holiday(
+                    holiday_id=data['holiday_id'],
+                    holiday_name=data['holiday_name'],
+                    holiday_date=holiday_date,
+                    holiday_description=data.get('holiday_description', ''),
+                    created_date=data.get('created_date'),
+                    modified_date=data.get('modified_date'),
+                    status=data.get('status', 1)
+                ))
+            return holidays
+        except Exception as e:
+            logger.error(f"Error getting holidays: {e}")
+            return []
 
-    def init_ui(self):
-        root = QVBoxLayout(self)
-        root.setContentsMargins(32, 24, 32, 24)
-        root.setSpacing(24)
-
-        header = QLabel("Master Data Management")
-        header.setObjectName("PageTitle")
-        header.setAttribute(Qt.WA_TranslucentBackground, True)
-        root.addWidget(header)
-
-        grid = QHBoxLayout()
-        grid.setSpacing(24)
-
-        grid.addWidget(self.department_section())
-        grid.addWidget(self.designation_section())
-        grid.addWidget(self.branch_section())
-
-        root.addLayout(grid)
-        root.addStretch()
-
-    # =====================================================
-    # SECTIONS
-    # =====================================================
-
-    def department_section(self) -> QFrame:
-        return self.create_section(
-            "🏢 Departments",
-            self.repo.get_all_departments,
-            self.add_department
-        )
-
-    def designation_section(self) -> QFrame:
-        return self.create_section(
-            "🎓 Designations",
-            self.repo.get_all_designations,
-            self.add_designation
-        )
-
-    def branch_section(self) -> QFrame:
-        return self.create_section(
-            "🏬 Branches",
-            self.repo.get_all_branches,
-            self.add_branch
-        )
-
-    # =====================================================
-    # UI BUILDER
-    # =====================================================
-
-    def create_section(self, title, fetch_fn, add_fn) -> QFrame:
-        card = QFrame()
-        card.setObjectName("Card")
-        card.setAttribute(Qt.WA_StyledBackground, True)
-
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(12)
-
-        title_label = QLabel(title)
-        title_label.setObjectName("SectionTitle")
-
-        list_widget = QListWidget()
-        self.populate_list(list_widget, fetch_fn)
-
-        input_field = QLineEdit()
-        input_field.setPlaceholderText("Enter name")
-
-        add_btn = QPushButton("➕ Add")
-        add_btn.setObjectName("PrimaryButton")
-
-        layout.addWidget(title_label)
-        layout.addWidget(list_widget)
-        layout.addWidget(input_field)
-        layout.addWidget(add_btn)
-
-        add_btn.clicked.connect(
-            lambda: self.add_item(
-                input_field, list_widget, add_fn
-            )
-        )
-
-        return card
-
-    # =====================================================
-    # MODEL-CORRECT OPERATIONS
-    # =====================================================
-
-    def add_department(self, name: str):
-        dept = Department(
-            department_id=name.lower().replace(" ", "_"),
-            department_name=name,
-            created_date=datetime.now(),
-            status=1
-        )
-        return self.repo.create_department(dept)
-
-    def add_designation(self, name: str):
-        desig = Designation(
-            designation_id=name.lower().replace(" ", "_"),
-            designation_name=name,
-            department_name="General",
-            created_date=datetime.now(),
-            status=1
-        )
-        return self.repo.create_designation(desig)
-
-    def add_branch(self, name: str):
-        branch = Branch(
-            branch_id=name.lower().replace(" ", "_"),
-            name=name,
-            branch_address="",
-            phone_number="",
-            email="",
-            created_date=datetime.now(),
-            status=1
-        )
-        return self.repo.create_branch(branch)
-
-    # =====================================================
-    # HELPERS
-    # =====================================================
-
-    def populate_list(self, list_widget, fetch_fn):
-        list_widget.clear()
-        for item in fetch_fn():
-            if hasattr(item, "department_name"):
-                list_widget.addItem(item.department_name)
-            elif hasattr(item, "designation_name"):
-                list_widget.addItem(item.designation_name)
-            elif hasattr(item, "name"):
-                list_widget.addItem(item.name)
-
-    def add_item(self, input_field, list_widget, add_fn):
-        name = input_field.text().strip()
-        if not name:
-            QMessageBox.warning(self, "Required", "Name cannot be empty.")
-            return
-
-        success = add_fn(name)
-        if success:
-            list_widget.addItem(name)
-            input_field.clear()
-        else:
-            QMessageBox.critical(self, "Error", "Failed to save record.")
