@@ -1,0 +1,152 @@
+2026-01-22 16:06:27,698 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:06:28,016 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:06:28,017 - __main__ - INFO - Database connected successfully
+2026-01-22 16:06:28,140 - __main__ - INFO - Default admin already exists
+2026-01-22 16:09:47,616 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-22 16:10:03,880 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:10:04,198 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:10:04,199 - __main__ - INFO - Database connected successfully
+2026-01-22 16:10:04,288 - __main__ - INFO - Default admin already exists
+2026-01-22 16:12:24,435 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-22 16:12:33,976 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:12:34,378 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:12:34,378 - __main__ - INFO - Database connected successfully
+2026-01-22 16:12:34,469 - __main__ - INFO - Default admin already exists
+2026-01-22 16:15:45,669 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:16:04,787 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:16:04,788 - __main__ - INFO - Database connected successfully
+2026-01-22 16:16:04,874 - __main__ - INFO - Default admin already exists
+2026-01-22 16:21:19,041 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:21:46,895 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:21:46,896 - __main__ - INFO - Database connected successfully
+2026-01-22 16:21:46,982 - __main__ - INFO - Default admin already exists
+2026-01-22 16:23:21,559 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:23:21,858 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:23:21,858 - __main__ - INFO - Database connected successfully
+2026-01-22 16:23:21,939 - __main__ - INFO - Default admin already exists
+2026-01-22 16:26:54,708 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:26:55,063 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:26:55,064 - __main__ - INFO - Database connected successfully
+2026-01-22 16:26:55,171 - __main__ - INFO - Default admin already exists
+2026-01-22 16:28:19,047 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:28:19,384 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:28:19,385 - __main__ - INFO - Database connected successfully
+2026-01-22 16:28:19,469 - __main__ - INFO - Default admin already exists
+2026-01-22 16:28:56,852 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:28:57,174 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:28:57,174 - __main__ - INFO - Database connected successfully
+2026-01-22 16:28:57,267 - __main__ - INFO - Default admin already exists
+2026-01-22 16:29:00,489 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-22 16:31:28,691 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:31:29,039 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:31:29,039 - __main__ - INFO - Database connected successfully
+2026-01-22 16:31:29,134 - __main__ - INFO - Default admin already exists
+2026-01-22 16:34:42,413 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:34:42,722 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:34:42,723 - __main__ - INFO - Database connected successfully
+2026-01-22 16:34:42,818 - __main__ - INFO - Default admin already exists
+2026-01-22 16:49:21,932 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-22 16:49:22,252 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-22 16:49:22,253 - __main__ - INFO - Database connected successfully
+2026-01-22 16:49:22,339 - __main__ - INFO - Default admin already exists
+2026-01-22 16:49:32,713 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-22 17:37:10,111 - payroll_system.utils.database - ERROR - Failed to connect to MongoDB: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212e86d6aac4d6d5d1e95, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-01-22 17:37:10,112 - __main__ - ERROR - Error initializing database: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212e86d6aac4d6d5d1e95, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-01-22 17:37:10,114 - __main__ - CRITICAL - Fatal error: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212e86d6aac4d6d5d1e95, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+Traceback (most recent call last):
+  File "C:\Users\vr812\Desktop\Project Payroll management system\payroll_system\main.py", line 88, in main
+    initialize_database()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\vr812\Desktop\Project Payroll management system\payroll_system\main.py", line 39, in initialize_database
+    db.connect()
+    ~~~~~~~~~~^^
+  File "C:\Users\vr812\Desktop\Project Payroll management system\payroll_system\utils\database.py", line 40, in connect
+    self._client.admin.command('ping')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\database.py", line 934, in command
+    with self._client._conn_for_reads(read_preference, session, operation=command_name) as (
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\mongo_client.py", line 1885, in _conn_for_reads
+    server = self._select_server(read_preference, session, operation)
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\mongo_client.py", line 1833, in _select_server
+    server = topology.select_server(
+        server_selector,
+    ...<2 lines>...
+        operation_id=operation_id,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+        selector,
+    ...<4 lines>...
+        operation_id=operation_id,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+        selector,
+    ...<4 lines>...
+        deprioritized_servers,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+        selector,
+    ...<4 lines>...
+        deprioritized_servers=deprioritized_servers,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+        f"{self._error_message(selector)}, Timeout: {timeout}s, Topology Description: {self.description!r}"
+    )
+pymongo.errors.ServerSelectionTimeoutError: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212e86d6aac4d6d5d1e95, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-01-22 17:37:10,123 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-22 17:37:23,918 - payroll_system.utils.database - ERROR - Failed to connect to MongoDB: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212f5c70a1fe726711945, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-01-22 17:37:23,919 - __main__ - ERROR - Error initializing database: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212f5c70a1fe726711945, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-01-22 17:37:23,921 - __main__ - CRITICAL - Fatal error: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212f5c70a1fe726711945, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+Traceback (most recent call last):
+  File "C:\Users\vr812\Desktop\Project Payroll management system\payroll_system\main.py", line 88, in main
+    initialize_database()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\vr812\Desktop\Project Payroll management system\payroll_system\main.py", line 39, in initialize_database
+    db.connect()
+    ~~~~~~~~~~^^
+  File "C:\Users\vr812\Desktop\Project Payroll management system\payroll_system\utils\database.py", line 40, in connect
+    self._client.admin.command('ping')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\database.py", line 934, in command
+    with self._client._conn_for_reads(read_preference, session, operation=command_name) as (
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\mongo_client.py", line 1885, in _conn_for_reads
+    server = self._select_server(read_preference, session, operation)
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\mongo_client.py", line 1833, in _select_server
+    server = topology.select_server(
+        server_selector,
+    ...<2 lines>...
+        operation_id=operation_id,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+        selector,
+    ...<4 lines>...
+        operation_id=operation_id,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+        selector,
+    ...<4 lines>...
+        deprioritized_servers,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+        selector,
+    ...<4 lines>...
+        deprioritized_servers=deprioritized_servers,
+    )
+  File "C:\Users\vr812\AppData\Roaming\Python\Python314\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+        f"{self._error_message(selector)}, Timeout: {timeout}s, Topology Description: {self.description!r}"
+    )
+pymongo.errors.ServerSelectionTimeoutError: SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 5.0s, Topology Description: <TopologyDescription id: 697212f5c70a1fe726711945, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-00.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-01.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-68nlitr-shard-00-02.oyk9ywl.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1077) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-01-22 17:37:23,929 - payroll_system.utils.database - INFO - Disconnected from MongoDB

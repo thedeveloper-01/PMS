@@ -1,179 +1,158 @@
 """
-Main window with sidebar navigation
+Main Application Window
+UI FIXED – sidebar, navigation, stacking, theme-safe
 """
-from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-                              QPushButton, QLabel, QStackedWidget, QMessageBox)
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont, QIcon
-from payroll_system.models.employee import Employee
-from payroll_system.config import ROLE_ADMIN, ROLE_HR, ROLE_EMPLOYEE, ROLE_NAMES
+
+from PySide6.QtWidgets import (
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QPushButton, QStackedWidget, QFrame
+)
+from PySide6.QtCore import Qt
+
 from payroll_system.gui.dashboard import DashboardWidget
 from payroll_system.gui.employee_management import EmployeeManagementWidget
 from payroll_system.gui.attendance_management import AttendanceManagementWidget
 from payroll_system.gui.payroll_management import PayrollManagementWidget
-from payroll_system.gui.reports_widget import ReportsWidget
 from payroll_system.gui.master_data_widgets import MasterDataWidget
+from payroll_system.gui.reports_widget import ReportsWidget
+
 
 class MainWindow(QMainWindow):
-    """Main application window with navigation"""
-    
-    def __init__(self, employee: Employee):
+
+    def __init__(self, employee):
         super().__init__()
-        self.current_employee = employee
+        self.employee = employee
         self.init_ui()
-    
+
     def init_ui(self):
-        """Initialize UI"""
-        self.setWindowTitle("Payroll Management System")
-        self.setMinimumSize(1200, 800)
-        
-        # Central widget
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-        
-        # Main layout
-        main_layout = QHBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
-        
+        self.setWindowTitle("PayMaster")
+        self.setMinimumSize(1200, 700)
+
+        # ---------- Central Surface ----------
+        surface = QWidget()
+        surface.setObjectName("Surface")
+        surface.setAttribute(Qt.WA_StyledBackground, True)
+
+        root = QHBoxLayout(surface)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
+
+        # ======================================================
         # Sidebar
-        sidebar = self.create_sidebar()
-        main_layout.addWidget(sidebar)
-        
-        # Content area
-        self.stacked_widget = QStackedWidget()
-        main_layout.addWidget(self.stacked_widget, 1)
-        
-        # Add widgets to stack
-        self.dashboard = DashboardWidget(self.current_employee)
-        self.employee_mgmt = EmployeeManagementWidget()
-        self.attendance_mgmt = AttendanceManagementWidget()
-        self.payroll_mgmt = PayrollManagementWidget()
-        self.reports = ReportsWidget()
-        self.master_data = MasterDataWidget()
-        
-        self.stacked_widget.addWidget(self.dashboard)
-        self.stacked_widget.addWidget(self.employee_mgmt)
-        self.stacked_widget.addWidget(self.attendance_mgmt)
-        self.stacked_widget.addWidget(self.payroll_mgmt)
-        self.stacked_widget.addWidget(self.reports)
-        self.stacked_widget.addWidget(self.master_data)
-        
-        # Show dashboard by default
-        self.stacked_widget.setCurrentIndex(0)
-        
-        central_widget.setLayout(main_layout)
-        
-        # Apply styles
-        self.apply_styles()
-    
-    def create_sidebar(self):
-        """Create sidebar navigation"""
-        sidebar = QWidget()
-        sidebar.setFixedWidth(250)
-        sidebar.setStyleSheet("""
-            QWidget {
-                background-color: #2c3e50;
-            }
-            QPushButton {
-                background-color: #34495e;
-                color: white;
-                text-align: left;
-                padding: 15px;
-                border: none;
-                font-size: 13px;
-            }
-            QPushButton:hover {
-                background-color: #3498db;
-            }
-            QPushButton:pressed {
-                background-color: #2980b9;
-            }
+        # ======================================================
+        sidebar = QFrame()
+        sidebar.setFixedWidth(260)
+        sidebar.setObjectName("Surface")
+        sidebar.setAttribute(Qt.WA_StyledBackground, True)
+
+        side_layout = QVBoxLayout(sidebar)
+        side_layout.setContentsMargins(16, 20, 16, 20)
+        side_layout.setSpacing(12)
+
+        # ---------- App Title ----------
+        title = QLabel("💼 PayMaster")
+        title.setAlignment(Qt.AlignLeft)
+        title.setAttribute(Qt.WA_TranslucentBackground, True)
+        title.setStyleSheet("""
             QLabel {
-                color: white;
-                padding: 10px;
-            }
-        """)
-        
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-        
-        # User info
-        user_info = QLabel(f"{self.current_employee.employee_name}\n"
-                          f"{self.current_employee.email}\n"
-                          f"Role: {ROLE_NAMES.get(self.current_employee.role, 'Employee')}")
-        user_info.setStyleSheet("""
-            QLabel {
-                background-color: #34495e;
-                padding: 15px;
-                border-bottom: 2px solid #2c3e50;
-            }
-        """)
-        layout.addWidget(user_info)
-        
-        # Navigation buttons
-        nav_buttons = [
-            ("Home", 0),
-            ("Employee Management", 1),
-            ("Attendance", 2),
-            ("Payroll", 3),
-            ("Reports", 4),
-            ("Master Data", 5),
-        ]
-        
-        # Show all buttons for Admin/HR, limited for Employee
-        if self.current_employee.role in [ROLE_ADMIN, ROLE_HR]:
-            for text, index in nav_buttons:
-                btn = QPushButton(text)
-                btn.clicked.connect(lambda checked, idx=index: self.navigate_to(idx))
-                layout.addWidget(btn)
-        else:
-            # Employee can only see limited options
-            limited_nav = [
-                ("Home", 0),
-                ("Attendance", 2),
-                ("Payroll", 3),
-            ]
-            for text, index in limited_nav:
-                btn = QPushButton(text)
-                btn.clicked.connect(lambda checked, idx=index: self.navigate_to(idx))
-                layout.addWidget(btn)
-        
-        layout.addStretch()
-        
-        # Logout button
-        logout_btn = QPushButton("Logout")
-        logout_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #e74c3c;
-            }
-            QPushButton:hover {
-                background-color: #c0392b;
-            }
-        """)
-        logout_btn.clicked.connect(self.logout)
-        layout.addWidget(logout_btn)
-        
-        sidebar.setLayout(layout)
-        return sidebar
-    
-    def navigate_to(self, index):
-        """Navigate to a specific page"""
-        self.stacked_widget.setCurrentIndex(index)
-    
-    def logout(self):
-        """Handle logout"""
-        reply = QMessageBox.question(self, "Logout", "Are you sure you want to logout?",
-                                    QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.Yes:
-            self.close()
-    
-    def apply_styles(self):
-        """Apply application-wide styles"""
-        self.setStyleSheet("""
-            QMainWindow {
-                background-color: #ecf0f1;
+                font-size: 20px;
+                font-weight: 800;
             }
         """)
 
+        side_layout.addWidget(title)
+        side_layout.addSpacing(8)
+
+        # ---------- Nav Buttons ----------
+        self.btn_dashboard = self.nav_button("📊 Dashboard")
+        self.btn_employees = self.nav_button("👥 Employees")
+        self.btn_attendance = self.nav_button("🕒 Attendance")
+        self.btn_payroll = self.nav_button("💰 Payroll")
+        self.btn_master = self.nav_button("⚙ Master Data")
+        self.btn_reports = self.nav_button("📁 Reports")
+
+        side_layout.addWidget(self.btn_dashboard)
+        side_layout.addWidget(self.btn_employees)
+        side_layout.addWidget(self.btn_attendance)
+        side_layout.addWidget(self.btn_payroll)
+        side_layout.addWidget(self.btn_master)
+        side_layout.addWidget(self.btn_reports)
+
+        side_layout.addStretch()
+
+        # ---------- User Footer ----------
+        footer = QLabel(f"Logged in as\n{self.employee.employee_name}")
+        footer.setAttribute(Qt.WA_TranslucentBackground, True)
+        footer.setStyleSheet("""
+            QLabel {
+                color: #94a3b8;
+                font-size: 12px;
+                padding-top: 12px;
+            }
+        """)
+        side_layout.addWidget(footer)
+
+        # ======================================================
+        # Content Area
+        # ======================================================
+        self.stack = QStackedWidget()
+        self.stack.setAttribute(Qt.WA_StyledBackground, True)
+
+        self.page_dashboard = DashboardWidget(self.employee)
+        self.page_employees = EmployeeManagementWidget()
+        self.page_attendance = AttendanceManagementWidget()
+        self.page_payroll = PayrollManagementWidget()
+        self.page_master = MasterDataWidget()
+        self.page_reports = ReportsWidget()
+
+        self.stack.addWidget(self.page_dashboard)
+        self.stack.addWidget(self.page_employees)
+        self.stack.addWidget(self.page_attendance)
+        self.stack.addWidget(self.page_payroll)
+        self.stack.addWidget(self.page_master)
+        self.stack.addWidget(self.page_reports)
+
+        # ---------- Navigation ----------
+        self.btn_dashboard.clicked.connect(lambda: self.switch_page(0))
+        self.btn_employees.clicked.connect(lambda: self.switch_page(1))
+        self.btn_attendance.clicked.connect(lambda: self.switch_page(2))
+        self.btn_payroll.clicked.connect(lambda: self.switch_page(3))
+        self.btn_master.clicked.connect(lambda: self.switch_page(4))
+        self.btn_reports.clicked.connect(lambda: self.switch_page(5))
+
+        self.set_active(self.btn_dashboard)
+        self.stack.setCurrentIndex(0)
+
+        # ---------- Assemble ----------
+        root.addWidget(sidebar)
+        root.addWidget(self.stack)
+        self.setCentralWidget(surface)
+
+    # ======================================================
+    # Helpers
+    # ======================================================
+    def nav_button(self, text: str) -> QPushButton:
+        btn = QPushButton(text)
+        btn.setCursor(Qt.PointingHandCursor)
+        btn.setCheckable(True)
+        btn.setAutoExclusive(True)
+        btn.setFixedHeight(44)
+        btn.setStyleSheet("""
+            QPushButton {
+                text-align: left;
+                padding-left: 14px;
+                border-radius: 10px;
+                font-weight: 600;
+            }
+            QPushButton:checked {
+                background: rgba(19,91,236,0.18);
+                border: 1px solid rgba(19,91,236,0.45);
+            }
+        """)
+        return btn
+
+    def set_active(self, btn: QPushButton):
+        btn.setChecked(True)
+
+    def switch_page(self, index: int):
+        self.stack.setCurrentIndex(index)
