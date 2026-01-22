@@ -109,9 +109,9 @@ class MasterDataTableWidget(QWidget):
         self.table = QTableWidget()
         self.table.setAlternatingRowColors(True)
         self.table.setShowGrid(False)
-        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table.verticalHeader().setVisible(False)
-        self.table.verticalHeader().setDefaultSectionSize(60)
+        self.table.verticalHeader().setDefaultSectionSize(70)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         
         if self.data_type == "Department":
@@ -174,7 +174,7 @@ class MasterDataTableWidget(QWidget):
                     delete_btn = QPushButton("🗑️")
                     delete_btn.setToolTip("Delete")
                     delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(30, 30)
+                    delete_btn.setFixedSize(40, 40)
                     delete_btn.clicked.connect(lambda checked, item_id=item.designation_id: 
                                               self.delete_item(item_id))
                     actions_layout.addWidget(delete_btn)
@@ -198,7 +198,7 @@ class MasterDataTableWidget(QWidget):
                     delete_btn = QPushButton("🗑️")
                     delete_btn.setToolTip("Delete")
                     delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(30, 30)
+                    delete_btn.setFixedSize(40, 40)
                     delete_btn.clicked.connect(lambda checked, item_id=item.branch_id: 
                                               self.delete_item(item_id))
                     actions_layout.addWidget(delete_btn)
@@ -222,7 +222,7 @@ class MasterDataTableWidget(QWidget):
                     delete_btn = QPushButton("🗑️")
                     delete_btn.setToolTip("Delete")
                     delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(30, 30)
+                    delete_btn.setFixedSize(40, 40)
                     delete_btn.clicked.connect(lambda checked, item_id=item.shift_id: 
                                               self.delete_item(item_id))
                     actions_layout.addWidget(delete_btn)
@@ -246,14 +246,14 @@ class MasterDataTableWidget(QWidget):
                     delete_btn = QPushButton("🗑️")
                     delete_btn.setToolTip("Delete")
                     delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(30, 30)
+                    delete_btn.setFixedSize(40, 40)
                     delete_btn.clicked.connect(lambda checked, item_id=item.holiday_id: 
                                               self.delete_item(item_id))
                     actions_layout.addWidget(delete_btn)
                     
                     self.table.setCellWidget(row, 3, actions_widget)
             
-            self.table.resizeColumnsToContents()
+            # self.table.resizeColumnsToContents()
                     
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading data: {str(e)}")
