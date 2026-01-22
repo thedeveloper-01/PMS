@@ -4,7 +4,7 @@ Attendance management widget
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QTableWidget, QTableWidgetItem,
                               QDateEdit, QComboBox, QMessageBox, QDialog,
-                              QFormLayout, QTimeEdit, QFrame, QListWidget, QListWidgetItem)
+                              QFormLayout, QTimeEdit)
 from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QFont
 from payroll_system.services.attendance_service import AttendanceService
@@ -23,121 +23,52 @@ class AttendanceManagementWidget(QWidget):
     def init_ui(self):
         """Initialize UI"""
         layout = QVBoxLayout()
-        layout.setSpacing(14)
-        layout.setContentsMargins(0, 0, 0, 0)
-
+        layout.setSpacing(15)
+        layout.setContentsMargins(20, 20, 20, 20)
+        
+        # Header
+        header_layout = QHBoxLayout()
         title = QLabel("Attendance Management")
-        title.setObjectName("PageTitle")
-        subtitle = QLabel("Dashboard > Attendance")
-        subtitle.setObjectName("PageSubtitle")
-        layout.addWidget(title)
-        layout.addWidget(subtitle)
-
-        # KPI row (like screenshot)
-        kpis = QHBoxLayout()
-        kpis.setSpacing(16)
-        self.kpi_present = self._kpi("Total Present", "0/0", "↑ +0%")
-        self.kpi_late = self._kpi("Total Late", "0", "↑ +0%")
-        self.kpi_pending = self._kpi("Pending Leave Requests", "0", "Review Now")
-        kpis.addWidget(self.kpi_present)
-        kpis.addWidget(self.kpi_late)
-        kpis.addWidget(self.kpi_pending)
-        layout.addLayout(kpis)
-
-        # Main split layout (calendar placeholder + list)
-        split = QHBoxLayout()
-        split.setSpacing(16)
-
-        left = QFrame()
-        left.setObjectName("Card")
-        left_l = QVBoxLayout()
-        left_l.setContentsMargins(16, 16, 16, 16)
-        left_l.setSpacing(10)
-        h = QLabel("Attendance Overview")
-        h.setStyleSheet("font-size: 16px; font-weight: 800;")
-        left_l.addWidget(h)
-        cal_hint = QLabel("(Calendar-style overview placeholder)")
-        cal_hint.setStyleSheet("color: #92a4c9; font-size: 12px;")
-        left_l.addWidget(cal_hint)
-
-        # Keep existing controls inside a compact row
-        controls = QFrame()
-        controls.setObjectName("CardAlt")
-        c = QHBoxLayout()
-        c.setContentsMargins(12, 12, 12, 12)
-        c.setSpacing(10)
+        title_font = QFont()
+        title_font.setPointSize(20)
+        title_font.setBold(True)
+        title.setFont(title_font)
+        header_layout.addWidget(title)
+        header_layout.addStretch()
+        
+        # Filter
+        filter_layout = QHBoxLayout()
+        filter_layout.addWidget(QLabel("Employee:"))
         self.employee_combo = QComboBox()
         self.load_employees()
+        filter_layout.addWidget(self.employee_combo)
+        
+        filter_layout.addWidget(QLabel("Date:"))
         self.date_input = QDateEdit()
         self.date_input.setDate(QDate.currentDate())
         self.date_input.setCalendarPopup(True)
+        filter_layout.addWidget(self.date_input)
+        
         mark_btn = QPushButton("Mark Attendance")
-        mark_btn.setObjectName("PrimaryButton")
         mark_btn.clicked.connect(self.mark_attendance)
-        view_btn = QPushButton("View")
+        filter_layout.addWidget(mark_btn)
+        
+        view_btn = QPushButton("View Attendance")
         view_btn.clicked.connect(self.view_attendance)
-        c.addWidget(QLabel("Employee:"))
-        c.addWidget(self.employee_combo, 1)
-        c.addWidget(QLabel("Month:"))
-        c.addWidget(self.date_input)
-        c.addWidget(mark_btn)
-        c.addWidget(view_btn)
-        controls.setLayout(c)
-        left_l.addWidget(controls)
-
-        # A simple month grid placeholder (we'll keep table as data view)
-        placeholder = QFrame()
-        placeholder.setObjectName("CardAlt")
-        ph = QVBoxLayout()
-        ph.setContentsMargins(16, 16, 16, 16)
-        ph.addWidget(QLabel("Tip: use the table on the right to mark LOP / view records."))
-        ph.addStretch()
-        placeholder.setLayout(ph)
-        left_l.addWidget(placeholder, 1)
-        left.setLayout(left_l)
-
-        right = QFrame()
-        right.setObjectName("Card")
-        right_l = QVBoxLayout()
-        right_l.setContentsMargins(16, 16, 16, 16)
-        right_l.setSpacing(10)
-        rh = QLabel("This Month")
-        rh.setStyleSheet("font-size: 16px; font-weight: 800;")
-        right_l.addWidget(rh)
-
-        # Table (existing)
+        filter_layout.addWidget(view_btn)
+        
+        header_layout.addLayout(filter_layout)
+        layout.addLayout(header_layout)
+        
+        # Table
         self.table = QTableWidget()
         self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(["Date", "Check-in", "Check-out", "Status", "Actions"])
-        self.table.horizontalHeader().setStretchLastSection(True)
-        right_l.addWidget(self.table, 1)
-        right.setLayout(right_l)
-
-        split.addWidget(left, 2)
-        split.addWidget(right, 1)
-        layout.addLayout(split, 1)
+        self.table.setHorizontalHeaderLabels([
+            "Date", "Check-in", "Check-out", "Status", "Actions"
+        ])
+        layout.addWidget(self.table)
         
         self.setLayout(layout)
-
-    def _kpi(self, title: str, value: str, badge: str) -> QFrame:
-        card = QFrame()
-        card.setObjectName("Card")
-        l = QVBoxLayout()
-        l.setContentsMargins(16, 16, 16, 16)
-        l.setSpacing(6)
-        t = QLabel(title)
-        t.setStyleSheet("color: #92a4c9; font-size: 12px; font-weight: 700;")
-        v = QLabel(value)
-        v.setObjectName("KpiValue")
-        v.setStyleSheet("font-size: 28px; font-weight: 900;")
-        b = QLabel(badge)
-        b.setStyleSheet("color: #92a4c9; font-size: 11px; font-weight: 700;")
-        l.addWidget(t)
-        l.addWidget(v)
-        l.addWidget(b)
-        l.addStretch()
-        card.setLayout(l)
-        return card
     
     def load_employees(self):
         """Load employees into combo"""
@@ -171,12 +102,6 @@ class AttendanceManagementWidget(QWidget):
             year = selected_date.year
             
             attendances = self.attendance_service.get_monthly_attendance(employee_id, month, year)
-
-            # Update KPIs for the selected employee+month
-            summary = self.attendance_service.calculate_attendance_summary(employee_id, month, year)
-            self._set_kpi_value(self.kpi_present, f"{summary['present_days']}/{summary['total_days']}")
-            self._set_kpi_value(self.kpi_late, "0")  # late tracking not implemented yet
-            self._set_kpi_value(self.kpi_pending, "0")  # leave workflow not implemented yet
             
             self.table.setRowCount(len(attendances))
             for row, att in enumerate(attendances):
@@ -201,16 +126,6 @@ class AttendanceManagementWidget(QWidget):
                 self.table.setCellWidget(row, 4, lop_btn)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading attendance: {str(e)}")
-
-    def _set_kpi_value(self, card: QFrame, value: str) -> None:
-        lay = card.layout()
-        if not lay:
-            return
-        for i in range(lay.count()):
-            w = lay.itemAt(i).widget()
-            if isinstance(w, QLabel) and w.objectName() == "KpiValue":
-                w.setText(value)
-                return
     
     def mark_lop(self, employee_id: str, att_date: date):
         """Mark Loss of Pay"""

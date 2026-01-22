@@ -17,7 +17,6 @@ if str(_REPO_ROOT) not in sys.path:
 
 from payroll_system.gui.login_window import LoginWindow
 from payroll_system.gui.main_window import MainWindow
-from payroll_system.gui.theme import app_stylesheet
 from payroll_system.utils.database import db
 from payroll_system.config import APP_NAME
 
@@ -91,7 +90,6 @@ def main():
         app = QApplication(sys.argv)
         app.setApplicationName(APP_NAME)
         app.setStyle('Fusion')  # Use Fusion style for better cross-platform appearance
-        app.setStyleSheet(app_stylesheet())
         
         # Create and show login window
         login_window = LoginWindow()

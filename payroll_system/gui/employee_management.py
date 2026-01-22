@@ -4,14 +4,13 @@ Employee management widget
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QTableWidget, QTableWidgetItem,
                               QLineEdit, QMessageBox, QDialog, QFormLayout,
-                              QComboBox, QDateEdit, QSpinBox, QDoubleSpinBox,
-                              QFrame, QSizePolicy)
+                              QComboBox, QDateEdit, QSpinBox, QDoubleSpinBox)
 from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QFont
 from payroll_system.services.employee_service import EmployeeService
 from payroll_system.repository.master_data_repository import MasterDataRepository
 from payroll_system.models.employee import Employee
-from payroll_system.config import ROLE_ADMIN, ROLE_HR, ROLE_EMPLOYEE, ROLE_NAMES
+from payroll_system.config import ROLE_ADMIN, ROLE_HR, ROLE_EMPLOYEE
 from datetime import datetime
 
 class EmployeeManagementWidget(QWidget):
@@ -27,73 +26,49 @@ class EmployeeManagementWidget(QWidget):
     def init_ui(self):
         """Initialize UI"""
         layout = QVBoxLayout()
-        layout.setSpacing(14)
-        layout.setContentsMargins(0, 0, 0, 0)
-
-        # Page header (title + subtitle)
-        title = QLabel("Employee Directory")
-        title.setObjectName("PageTitle")
-        subtitle = QLabel("Manage your team members, roles, and employment status.")
-        subtitle.setObjectName("PageSubtitle")
-        layout.addWidget(title)
-        layout.addWidget(subtitle)
-
-        # Toolbar card (search + filters + add)
-        toolbar = QFrame()
-        toolbar.setObjectName("Card")
-        tb = QHBoxLayout()
-        tb.setContentsMargins(16, 16, 16, 16)
-        tb.setSpacing(10)
-
-        self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("Search by name, role, or email...")
-        self.search_input.textChanged.connect(self.search_employees)
-        self.search_input.setFixedHeight(42)
-        self.search_input.setMinimumWidth(360)
-        tb.addWidget(self.search_input, 1)
-
-        self.dept_filter = QComboBox()
-        self.dept_filter.setFixedHeight(42)
-        self.dept_filter.setMinimumWidth(180)
-        self.dept_filter.addItem("All Departments", None)
-        for d in self.master_repo.get_all_departments():
-            self.dept_filter.addItem(d.department_name, d.department_id)
-        self.dept_filter.currentIndexChanged.connect(self.search_employees)
-        tb.addWidget(self.dept_filter)
-
-        self.status_filter = QComboBox()
-        self.status_filter.setFixedHeight(42)
-        self.status_filter.setMinimumWidth(150)
-        self.status_filter.addItem("Any Status", None)
-        self.status_filter.addItem("Active", 1)
-        self.status_filter.addItem("Inactive", 0)
-        self.status_filter.currentIndexChanged.connect(self.search_employees)
-        tb.addWidget(self.status_filter)
-
-        add_btn = QPushButton("+  Add Employee")
-        add_btn.setObjectName("PrimaryButton")
-        add_btn.setFixedHeight(42)
+        layout.setSpacing(15)
+        layout.setContentsMargins(20, 20, 20, 20)
+        
+        # Header
+        header_layout = QHBoxLayout()
+        title = QLabel("Employee Management")
+        title_font = QFont()
+        title_font.setPointSize(20)
+        title_font.setBold(True)
+        title.setFont(title_font)
+        header_layout.addWidget(title)
+        header_layout.addStretch()
+        
+        # Buttons
+        add_btn = QPushButton("Add Employee")
         add_btn.clicked.connect(self.add_employee)
-        tb.addWidget(add_btn)
-
+        header_layout.addWidget(add_btn)
+        
         refresh_btn = QPushButton("Refresh")
-        refresh_btn.setFixedHeight(42)
         refresh_btn.clicked.connect(self.load_employees)
-        tb.addWidget(refresh_btn)
-
-        toolbar.setLayout(tb)
-        layout.addWidget(toolbar)
-
-        # Table container
+        header_layout.addWidget(refresh_btn)
+        
+        layout.addLayout(header_layout)
+        
+        # Search bar
+        search_layout = QHBoxLayout()
+        search_label = QLabel("Search:")
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Search by name, email, or ID...")
+        self.search_input.textChanged.connect(self.search_employees)
+        search_layout.addWidget(search_label)
+        search_layout.addWidget(self.search_input)
+        layout.addLayout(search_layout)
+        
+        # Table
         self.table = QTableWidget()
         self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels([
-            "Employee", "Department", "Role", "Salary",
-            "Status", "Email", "Mobile", "Actions"
+            "Employee ID", "Name", "Email", "Mobile", 
+            "Department", "Designation", "Basic Salary", "Actions"
         ])
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        layout.addWidget(self.table, 1)
+        layout.addWidget(self.table)
         
         self.setLayout(layout)
     
@@ -101,26 +76,16 @@ class EmployeeManagementWidget(QWidget):
         """Load employees into table"""
         try:
             employees = self.employee_service.get_all_employees(status=1)
-            # Apply status filter if needed
-            status_filter = self.status_filter.currentData() if hasattr(self, "status_filter") else None
-            if status_filter in (0, 1):
-                employees = [e for e in employees if e.status == status_filter]
-
-            dept_filter = self.dept_filter.currentData() if hasattr(self, "dept_filter") else None
-            if dept_filter:
-                employees = [e for e in employees if e.department_id == dept_filter]
-
             self.table.setRowCount(len(employees))
             
             for row, employee in enumerate(employees):
-                # Employee (Name + ID)
-                self.table.setItem(row, 0, QTableWidgetItem(f"{employee.employee_name}\nID: {employee.employee_id}"))
-                self.table.setItem(row, 1, QTableWidgetItem(str(employee.department_id or "—")))
-                self.table.setItem(row, 2, QTableWidgetItem(ROLE_NAMES.get(employee.role, "Employee")))
-                self.table.setItem(row, 3, QTableWidgetItem(f"₹{employee.basic_salary:,.2f}"))
-                self.table.setItem(row, 4, QTableWidgetItem("Active" if employee.status == 1 else "Inactive"))
-                self.table.setItem(row, 5, QTableWidgetItem(employee.email))
-                self.table.setItem(row, 6, QTableWidgetItem(str(employee.mobile_number)))
+                self.table.setItem(row, 0, QTableWidgetItem(employee.employee_id))
+                self.table.setItem(row, 1, QTableWidgetItem(employee.employee_name))
+                self.table.setItem(row, 2, QTableWidgetItem(employee.email))
+                self.table.setItem(row, 3, QTableWidgetItem(str(employee.mobile_number)))
+                self.table.setItem(row, 4, QTableWidgetItem(str(employee.department_id or "N/A")))
+                self.table.setItem(row, 5, QTableWidgetItem(str(employee.designation_id or "N/A")))
+                self.table.setItem(row, 6, QTableWidgetItem(f"₹{employee.basic_salary:.2f}"))
                 
                 # Actions
                 actions_widget = QWidget()
@@ -132,7 +97,7 @@ class EmployeeManagementWidget(QWidget):
                 actions_layout.addWidget(edit_btn)
                 
                 delete_btn = QPushButton("Delete")
-                delete_btn.setObjectName("DangerButton")
+                delete_btn.setStyleSheet("background-color: #e74c3c; color: white;")
                 delete_btn.clicked.connect(lambda checked, e=employee: self.delete_employee(e))
                 actions_layout.addWidget(delete_btn)
                 
@@ -144,29 +109,22 @@ class EmployeeManagementWidget(QWidget):
     def search_employees(self):
         """Search employees"""
         search_term = self.search_input.text().strip()
-        dept_filter = self.dept_filter.currentData() if hasattr(self, "dept_filter") else None
-        status_filter = self.status_filter.currentData() if hasattr(self, "status_filter") else None
+        if not search_term:
+            self.load_employees()
+            return
         
         try:
-            if search_term:
-                employees = self.employee_service.search_employees(search_term)
-            else:
-                employees = self.employee_service.get_all_employees(status=1)
-
-            if dept_filter:
-                employees = [e for e in employees if e.department_id == dept_filter]
-            if status_filter in (0, 1):
-                employees = [e for e in employees if e.status == status_filter]
-
+            employees = self.employee_service.search_employees(search_term)
             self.table.setRowCount(len(employees))
+            
             for row, employee in enumerate(employees):
-                self.table.setItem(row, 0, QTableWidgetItem(f"{employee.employee_name}\nID: {employee.employee_id}"))
-                self.table.setItem(row, 1, QTableWidgetItem(str(employee.department_id or "—")))
-                self.table.setItem(row, 2, QTableWidgetItem(ROLE_NAMES.get(employee.role, "Employee")))
-                self.table.setItem(row, 3, QTableWidgetItem(f"₹{employee.basic_salary:,.2f}"))
-                self.table.setItem(row, 4, QTableWidgetItem("Active" if employee.status == 1 else "Inactive"))
-                self.table.setItem(row, 5, QTableWidgetItem(employee.email))
-                self.table.setItem(row, 6, QTableWidgetItem(str(employee.mobile_number)))
+                self.table.setItem(row, 0, QTableWidgetItem(employee.employee_id))
+                self.table.setItem(row, 1, QTableWidgetItem(employee.employee_name))
+                self.table.setItem(row, 2, QTableWidgetItem(employee.email))
+                self.table.setItem(row, 3, QTableWidgetItem(str(employee.mobile_number)))
+                self.table.setItem(row, 4, QTableWidgetItem(str(employee.department_id or "N/A")))
+                self.table.setItem(row, 5, QTableWidgetItem(str(employee.designation_id or "N/A")))
+                self.table.setItem(row, 6, QTableWidgetItem(f"₹{employee.basic_salary:.2f}"))
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error searching: {str(e)}")
     
