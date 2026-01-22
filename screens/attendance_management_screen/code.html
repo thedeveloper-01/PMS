@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Attendance Management</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111722",
+                        "card-dark": "#232f48",
+                        "border-dark": "#324467",
+                        "text-muted": "#92a4c9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar for the list */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #192233; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #324467; 
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #4b628b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased overflow-x-hidden selection:bg-primary selection:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-slate-200 dark:border-b-[#232f48] bg-white dark:bg-[#111722] px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="size-8 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">token</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Payroll System</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-sm font-medium leading-normal text-slate-500 hover:text-primary dark:text-text-muted dark:hover:text-white" href="#">Dashboard</a>
+<a class="text-sm font-medium leading-normal text-slate-500 hover:text-primary dark:text-text-muted dark:hover:text-white" href="#">Employees</a>
+<a class="text-sm font-medium leading-normal text-slate-500 hover:text-primary dark:text-text-muted dark:hover:text-white" href="#">Payroll</a>
+<a class="text-sm font-medium leading-normal text-primary font-bold" href="#">Attendance</a>
+<a class="text-sm font-medium leading-normal text-slate-500 hover:text-primary dark:text-text-muted dark:hover:text-white" href="#">Settings</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-[#232f48] dark:hover:bg-[#2f3e5e] text-slate-900 dark:text-white transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-[#232f48] dark:hover:bg-[#2f3e5e] text-slate-900 dark:text-white transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-slate-200 dark:border-[#232f48]" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvUUmgOUHchh9JIBQebAVyvsaBttU6Um6jgVLnE0roEFGHyEuGQaIHa26AH7xotKCI4yX0M3QogbXRiMb8VuPHusD24p7_vvb8Rruq7UDivDnn71jOOXLnbFf2cNqj35w3w-b8KeYJfs-o9qIDVIkjzxe3qqarSAmHhXzglz3RVMSRWXnlXRMCL-6uyCvM6E-p26jZSMw-hIMNlhReFNvisPxxS8g4nxdmy4-BrlbQVpt2Vb7Z901awSXNoLjTmTvo9uZj0ML7uz4");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 px-6 py-8 md:px-10 lg:px-20 max-w-[1600px] mx-auto w-full">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+<div>
+<h1 class="text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Attendance Management</h1>
+<p class="text-slate-500 dark:text-text-muted text-sm mt-1 font-medium">Dashboard &gt; Attendance</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-white dark:bg-[#232f48] text-slate-900 dark:text-white border border-slate-200 dark:border-border-dark text-sm font-bold hover:bg-slate-50 dark:hover:bg-[#2f3e5e] transition-colors">
+<span class="material-symbols-outlined mr-2 text-[20px]">calendar_month</span>
+                        October 2023
+                    </button>
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-900/20">
+<span class="material-symbols-outlined mr-2 text-[20px]">download</span>
+                        Export Report
+                    </button>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-white dark:bg-card-dark border border-slate-200 dark:border-transparent shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-text-muted text-sm font-medium">Total Present</p>
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+</div>
+<div class="flex items-end gap-3">
+<p class="text-3xl font-bold tracking-tight">142<span class="text-slate-400 dark:text-slate-500 text-xl font-medium">/150</span></p>
+<p class="text-emerald-500 text-sm font-bold mb-1.5 flex items-center">
+<span class="material-symbols-outlined text-sm mr-0.5">trending_up</span> +2%
+                        </p>
+</div>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-white dark:bg-card-dark border border-slate-200 dark:border-transparent shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-text-muted text-sm font-medium">Total Late</p>
+<span class="material-symbols-outlined text-amber-500">schedule</span>
+</div>
+<div class="flex items-end gap-3">
+<p class="text-3xl font-bold tracking-tight">5</p>
+<p class="text-amber-500 text-sm font-bold mb-1.5 flex items-center">
+<span class="material-symbols-outlined text-sm mr-0.5">warning</span> +1.5%
+                        </p>
+</div>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-white dark:bg-card-dark border border-slate-200 dark:border-transparent shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-text-muted text-sm font-medium">Pending Leave Requests</p>
+<span class="material-symbols-outlined text-primary">pending_actions</span>
+</div>
+<div class="flex items-end gap-3">
+<p class="text-3xl font-bold tracking-tight">3</p>
+<a class="text-primary text-sm font-bold mb-1.5 hover:underline decoration-2" href="#">Review Now</a>
+</div>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 h-full">
+<!-- Left Column: Calendar View (8 cols) -->
+<div class="xl:col-span-8 flex flex-col gap-4">
+<div class="bg-white dark:bg-card-dark rounded-xl p-6 border border-slate-200 dark:border-transparent shadow-sm flex flex-col h-full">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-bold">Attendance Overview</h3>
+<div class="flex gap-2">
+<button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<span class="font-bold text-lg w-32 text-center">October</span>
+<button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Calendar Grid -->
+<div class="grid grid-cols-7 gap-4 mb-2">
+<!-- Days Header -->
+<div class="text-center text-sm font-medium text-slate-400 dark:text-text-muted uppercase tracking-wider">Sun</div>
+<div class="text-center text-sm font-medium text-slate-400 dark:text-text-muted uppercase tracking-wider">Mon</div>
+<div class="text-center text-sm font-medium text-slate-400 dark:text-text-muted uppercase tracking-wider">Tue</div>
+<div class="text-center text-sm font-medium text-slate-400 dark:text-text-muted uppercase tracking-wider">Wed</div>
+<div class="text-center text-sm font-medium text-slate-400 dark:text-text-muted uppercase tracking-wider">Thu</div>
+<div class="text-center text-sm font-medium text-slate-400 dark:text-text-muted uppercase tracking-wider">Fri</div>
+<div class="text-center text-sm font-medium text-slate-400 dark:text-text-muted uppercase tracking-wider">Sat</div>
+</div>
+<div class="grid grid-cols-7 gap-2 lg:gap-4 flex-1 auto-rows-fr">
+<!-- Empty previous month days -->
+<div class="min-h-[100px] rounded-lg p-2 bg-slate-50 dark:bg-[#192233]/50 opacity-50"></div>
+<div class="min-h-[100px] rounded-lg p-2 bg-slate-50 dark:bg-[#192233]/50 opacity-50"></div>
+<!-- Calendar Days -->
+<!-- Day 1 -->
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors">
+<span class="text-sm font-bold text-slate-500 dark:text-slate-400">1</span>
+<div class="mt-2 flex flex-col gap-1">
+<div class="h-1.5 w-full bg-emerald-500 rounded-full"></div>
+<div class="text-[10px] text-slate-500 dark:text-text-muted flex justify-between">
+<span>98%</span>
+</div>
+</div>
+</div>
+<!-- Day 2 -->
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors">
+<span class="text-sm font-bold text-slate-500 dark:text-slate-400">2</span>
+<div class="mt-2 flex flex-col gap-1">
+<div class="h-1.5 w-full bg-emerald-500 rounded-full"></div>
+</div>
+</div>
+<!-- Day 3 -->
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors">
+<span class="text-sm font-bold text-slate-500 dark:text-slate-400">3</span>
+<div class="mt-2 flex flex-col gap-1">
+<div class="h-1.5 w-full bg-amber-500 rounded-full"></div>
+<div class="text-[10px] text-amber-500 flex justify-between font-medium">
+<span>High Late</span>
+</div>
+</div>
+</div>
+<!-- Day 4 -->
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors">
+<span class="text-sm font-bold text-slate-500 dark:text-slate-400">4</span>
+<div class="mt-2 flex flex-col gap-1">
+<div class="h-1.5 w-full bg-emerald-500 rounded-full"></div>
+</div>
+</div>
+<!-- Day 5 -->
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors">
+<span class="text-sm font-bold text-slate-500 dark:text-slate-400">5</span>
+<div class="mt-2 flex flex-col gap-1">
+<div class="h-1.5 w-full bg-emerald-500 rounded-full"></div>
+</div>
+</div>
+<!-- Day 6 (Weekend) -->
+<div class="min-h-[100px] border border-slate-100 dark:border-slate-800 rounded-lg p-3 bg-slate-100 dark:bg-[#151c2b] opacity-70">
+<span class="text-sm font-bold text-slate-400">6</span>
+</div>
+<!-- Day 7 (Weekend) -->
+<div class="min-h-[100px] border border-slate-100 dark:border-slate-800 rounded-lg p-3 bg-slate-100 dark:bg-[#151c2b] opacity-70">
+<span class="text-sm font-bold text-slate-400">7</span>
+</div>
+<!-- Example of Active/Selected Day -->
+<!-- Day 8 -->
+<div class="min-h-[100px] border-2 border-primary rounded-lg p-3 bg-blue-50/10 dark:bg-[#192233] relative group cursor-pointer shadow-[0_0_15px_rgba(19,91,236,0.15)]">
+<span class="text-sm font-bold text-primary">8</span>
+<div class="absolute top-3 right-3 size-2 bg-primary rounded-full"></div>
+<div class="mt-2 flex flex-col gap-1">
+<div class="h-1.5 w-full bg-emerald-400 rounded-full"></div>
+</div>
+</div>
+<!-- Filler days for visual completeness -->
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors"><span class="text-sm font-bold text-slate-500 dark:text-slate-400">9</span></div>
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors"><span class="text-sm font-bold text-slate-500 dark:text-slate-400">10</span></div>
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors"><span class="text-sm font-bold text-slate-500 dark:text-slate-400">11</span></div>
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors"><span class="text-sm font-bold text-slate-500 dark:text-slate-400">12</span></div>
+<div class="min-h-[100px] border border-slate-200 dark:border-border-dark rounded-lg p-3 bg-slate-50 dark:bg-[#192233] relative group hover:border-primary cursor-pointer transition-colors"><span class="text-sm font-bold text-slate-500 dark:text-slate-400">13</span></div>
+</div>
+</div>
+</div>
+<!-- Right Column: Today's Attendance List (4 cols) -->
+<div class="xl:col-span-4 flex flex-col h-full">
+<div class="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-transparent shadow-sm flex flex-col h-full overflow-hidden">
+<!-- List Header & Filters -->
+<div class="p-6 border-b border-slate-200 dark:border-border-dark space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="text-xl font-bold">Today's Attendance</h3>
+<span class="bg-blue-100 text-primary dark:bg-primary/20 dark:text-blue-300 text-xs font-bold px-2 py-1 rounded">Oct 8</span>
+</div>
+<!-- Search & Filter Controls -->
+<div class="flex flex-col gap-3">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full bg-slate-50 dark:bg-[#192233] border border-slate-200 dark:border-border-dark rounded-lg pl-10 pr-4 py-2.5 text-sm focus:ring-1 focus:ring-primary focus:border-primary dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#64748b] transition-all" placeholder="Search employee..." type="text"/>
+</div>
+<div class="flex gap-2">
+<div class="relative flex-1">
+<select class="w-full appearance-none bg-slate-50 dark:bg-[#192233] border border-slate-200 dark:border-border-dark rounded-lg pl-3 pr-8 py-2.5 text-sm focus:ring-1 focus:ring-primary focus:border-primary dark:text-white transition-all">
+<option>All Depts</option>
+<option>Engineering</option>
+<option>HR</option>
+<option>Sales</option>
+</select>
+<span class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+<span class="material-symbols-outlined text-[20px]">arrow_drop_down</span>
+</span>
+</div>
+<div class="relative flex-1">
+<select class="w-full appearance-none bg-slate-50 dark:bg-[#192233] border border-slate-200 dark:border-border-dark rounded-lg pl-3 pr-8 py-2.5 text-sm focus:ring-1 focus:ring-primary focus:border-primary dark:text-white transition-all">
+<option>All Status</option>
+<option>Present</option>
+<option>Late</option>
+<option>Absent</option>
+</select>
+<span class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Scrollable List -->
+<div class="overflow-y-auto flex-1 custom-scrollbar p-2">
+<!-- List Item: Present -->
+<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a3855] transition-colors group cursor-pointer border-b border-transparent dark:border-slate-800 last:border-0">
+<div class="relative">
+<div class="size-10 rounded-full bg-cover bg-center border border-slate-200 dark:border-slate-600" data-alt="Avatar of Sarah Jenkins" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD_OlQQR7K5O4_j9G37sn3Y670zhOQTNPVACamlUz-sOUKz5ZGD4QovL6-vyuioD-S39mD05d8A9zkUDs9M46v_dsXH4dNbDcIdnFS1-NA96datx40RfJy0nJFvzdsc5irzB7G2-abIhC0QW7wS2NcDkOBsrHZBrKeX_vPnrewfsf9zcSToIQa696XpGu97ZLUEueQjm_kA1RQG4UIwpV4ltL7LlWAYCXzLcIsStc7RpoVRy-1Egx2Kh6fF6n-oiHv0Oso7PZj83mI");'></div>
+<div class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-500 border-2 border-white dark:border-[#232f48] rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate">Sarah Jenkins</p>
+<p class="text-xs text-slate-500 dark:text-text-muted truncate">UI Designer • 08:55 AM</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+                                    Present
+                                </span>
+</div>
+<!-- List Item: Late -->
+<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a3855] transition-colors group cursor-pointer border-b border-transparent dark:border-slate-800 last:border-0">
+<div class="relative">
+<div class="size-10 rounded-full bg-cover bg-center border border-slate-200 dark:border-slate-600" data-alt="Avatar of Mike Ross" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA1DkpXH8BgIzxKg7NNIol-hc9G4KSIuzaIca8_jDJ8hnFyPvNNGiYbv90xUayjG0q1n-WkgN4jJwcr-mdo_7InR5NcLEKFVcSwlL1EchQoj6fVGDCYbW9FluLkQBLFrzvffTZ1mCT6bP3dTaQuRTtGBwWpHLisbTTLIDD5taF1DxPG5YJ_xGM5Ocy7FW4uAFoz407YvzAIr54nqNIVmvItW0L-ab4Xvq3-bxa9QIzoKl_7f1JA5X1WpEwZvSaNby8CZIdtBxwc6D0");'></div>
+<div class="absolute -bottom-0.5 -right-0.5 size-3 bg-amber-500 border-2 border-white dark:border-[#232f48] rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate">Mike Ross</p>
+<p class="text-xs text-slate-500 dark:text-text-muted truncate">Legal Counsel • 09:15 AM</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">
+                                    Late
+                                </span>
+</div>
+<!-- List Item: Absent -->
+<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a3855] transition-colors group cursor-pointer border-b border-transparent dark:border-slate-800 last:border-0">
+<div class="relative">
+<div class="size-10 rounded-full bg-cover bg-center border border-slate-200 dark:border-slate-600 grayscale opacity-80" data-alt="Avatar of John Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC-fpyte5wUFVnojiZwFNrmuHwDuVUTvxDfMFn_j2bG-6GR-YEdoEjCfSrGOEsZPiBz7oeFSfzStnrWYuQe2V7Q3NpVZk1b8rkvxVDOT2IRxjw19yH-raBD3_yLIzsr59v2JWIOc4Izapzf8B-FvOUee06EEgG3tMj5FJFjlNUZAURchBJ7TViMrnhqZ3D3XAIzuH0dMMVTQngFHdMUZGapNmTWrQ-izyE57OCx8JypYYmVbMK4iZvCFj2BdS3rp_T6O4ICevkGOCU");'></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate text-slate-500 dark:text-slate-400">John Doe</p>
+<p class="text-xs text-slate-500 dark:text-text-muted truncate">Backend Dev • --:--</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-rose-100 text-rose-800 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20">
+                                    Absent
+                                </span>
+</div>
+<!-- List Item: Leave -->
+<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a3855] transition-colors group cursor-pointer border-b border-transparent dark:border-slate-800 last:border-0">
+<div class="relative">
+<div class="size-10 rounded-full bg-cover bg-center border border-slate-200 dark:border-slate-600" data-alt="Avatar of Emily Chen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCxto0Z6SW15hRluCGpBDKDLzhV4q7i0iL27TeKOsXZBCfmCyYp6gvKxMGSSbnphzjDjZBD2X7xGyB5QSaqHPTKBfU_EGD14k0sPzWzYjeWelHX6JQuOkUf6Q50-PGs_UXfkOAg4RCkOG9BRcdnv9TY7WRtRK9LiRJdAgQ_VeKbF7vTlJF6B1why9ee3VHGZ7w0l5xuTX_oo_bWIV2v6CHwCCRB08lFl6eExlwokO_PBfnmOMpLGy3FCgojiAQ7S_Vp3EO6twQiduI");'></div>
+<div class="absolute -bottom-0.5 -right-0.5 size-3 bg-purple-500 border-2 border-white dark:border-[#232f48] rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate">Emily Chen</p>
+<p class="text-xs text-slate-500 dark:text-text-muted truncate">Product Manager • On Leave</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-500/10 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20">
+                                    On Leave
+                                </span>
+</div>
+<!-- Repeat items for scrolling effect -->
+<!-- List Item: Present -->
+<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a3855] transition-colors group cursor-pointer border-b border-transparent dark:border-slate-800 last:border-0">
+<div class="relative">
+<div class="size-10 rounded-full bg-cover bg-center border border-slate-200 dark:border-slate-600" data-alt="Avatar of David Kim" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDvcd0OWOMRKQY4BXPj3O-xu2qYRbeQiptw7AXm2UlEJCe5CIkraiepoMnW04eNIOuqQ6wNRBzoMx9QUSnsALAuZtxvudl7AMg2bDQjLuL87FEo-J8jgTtQMwqWq7fOa22Ylxxhdndb79AO1kW0zo3kTt_L-LwrF__rnRXbbEvRlK4TbIfVdvFh51xKr8cnb3kNc2XW7urOph9XI_1ksCP-Maf8nqA9I-5YVThDnml0peFc8Qz5ZA4iMcLE_JznfSYWY_B312DY-Ug");'></div>
+<div class="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-500 border-2 border-white dark:border-[#232f48] rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate">David Kim</p>
+<p class="text-xs text-slate-500 dark:text-text-muted truncate">Data Analyst • 08:45 AM</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+                                    Present
+                                </span>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="p-4 border-t border-slate-200 dark:border-border-dark">
+<button class="w-full flex items-center justify-center rounded-lg h-10 bg-primary/20 hover:bg-primary/30 text-primary text-sm font-bold transition-colors">
+<span class="material-symbols-outlined text-lg mr-2">add</span>
+                                Add Attendance Record
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

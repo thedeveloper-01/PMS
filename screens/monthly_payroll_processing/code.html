@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Monthly Payroll Processing</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better dark mode look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1c1f27;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar -->
+<aside class="flex w-64 flex-col border-r border-[#282e39] bg-[#111318] h-full flex-shrink-0">
+<div class="flex h-16 items-center px-6 border-b border-[#282e39]">
+<span class="material-symbols-outlined text-primary mr-2">token</span>
+<h1 class="text-white text-lg font-bold tracking-tight">Enterprise HR</h1>
+</div>
+<div class="flex flex-col gap-2 p-4 overflow-y-auto">
+<div class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#282e39] rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#282e39] rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium">Employees</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 bg-primary/20 text-primary rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined font-variation-settings-fill">payments</span>
+<p class="text-sm font-medium">Payroll</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#282e39] rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">description</span>
+<p class="text-sm font-medium">Reports</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#282e39] rounded-lg cursor-pointer transition-colors">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</div>
+</div>
+<div class="mt-auto p-4 border-t border-[#282e39]">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-cover bg-center" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBO-ZlLAJcwtRiJwyV6vX1K8srVKocafRdjY7yfqhIzt0mzun97IOy9Os5ieSVVBr9KaLPgw0OnvQUlsUu3VfRmBkXz0Cl-fW3WtDUqaOw48AMuTsjoIwcO2GWCYyUPOxbM6KUxlh3jfU3Vv-MzfOGs8sGrMMIcANFUHsaR8GSL9uZqYazwbtwEaiv0HqwXxyFiZhnbYaWLpnaR1m0WBd8yIHd3vFCia2gEQHVX6Je7adaIwtL2Q5mZSpIQRed55MDc135Klt26giA");'></div>
+<div>
+<p class="text-white text-sm font-medium">Jane Admin</p>
+<p class="text-gray-500 text-xs">Payroll Manager</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex flex-1 flex-col h-full relative overflow-hidden">
+<!-- Header -->
+<header class="h-16 flex items-center justify-between border-b border-[#282e39] px-6 bg-[#111318] flex-shrink-0">
+<div class="flex items-center gap-2">
+<a class="text-[#9da6b9] text-sm font-medium hover:text-white transition-colors" href="#">Home</a>
+<span class="text-[#9da6b9] text-sm">/</span>
+<a class="text-[#9da6b9] text-sm font-medium hover:text-white transition-colors" href="#">Payroll</a>
+<span class="text-[#9da6b9] text-sm">/</span>
+<span class="text-white text-sm font-medium">Monthly Processing</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-gray-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-[#111318]"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Left Side: Filters & Table -->
+<div class="flex flex-col flex-1 overflow-hidden">
+<div class="flex flex-col p-6 pb-0 gap-6 flex-shrink-0">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<h2 class="text-white text-3xl font-bold tracking-tight">Monthly Processing</h2>
+<p class="text-[#9da6b9] text-sm">Review salaries, deductions, and finalize payout for October 2023.</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-500 text-xs font-medium border border-yellow-500/20">Status: Draft</span>
+</div>
+</div>
+<!-- Filters Bar -->
+<div class="flex flex-wrap items-end gap-4 p-4 rounded-xl bg-[#1c1f27] border border-[#282e39]">
+<label class="flex flex-col min-w-40">
+<p class="text-[#9da6b9] text-xs font-medium mb-1.5 uppercase tracking-wider">Month</p>
+<div class="relative">
+<select class="w-full appearance-none rounded-lg border border-[#3b4354] bg-[#111318] py-2.5 pl-3 pr-10 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm">
+<option>October</option>
+<option>September</option>
+<option>August</option>
+</select>
+<span class="pointer-events-none absolute right-3 top-2.5 text-gray-400">
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</span>
+</div>
+</label>
+<label class="flex flex-col min-w-32">
+<p class="text-[#9da6b9] text-xs font-medium mb-1.5 uppercase tracking-wider">Year</p>
+<div class="relative">
+<select class="w-full appearance-none rounded-lg border border-[#3b4354] bg-[#111318] py-2.5 pl-3 pr-10 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm">
+<option>2023</option>
+<option>2022</option>
+</select>
+<span class="pointer-events-none absolute right-3 top-2.5 text-gray-400">
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</span>
+</div>
+</label>
+<label class="flex flex-col flex-1 min-w-[200px]">
+<p class="text-[#9da6b9] text-xs font-medium mb-1.5 uppercase tracking-wider">Search Employee</p>
+<div class="relative">
+<span class="absolute left-3 top-2.5 text-gray-500">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full rounded-lg border border-[#3b4354] bg-[#111318] py-2.5 pl-10 pr-4 text-white placeholder-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm" placeholder="Search by name or ID..." type="text"/>
+</div>
+</label>
+<button class="flex items-center justify-center gap-2 rounded-lg border border-[#3b4354] bg-[#282e39] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#3b4354] transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                            Filters
+                        </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="flex-1 overflow-auto p-6 pt-4">
+<div class="rounded-xl border border-[#282e39] overflow-hidden">
+<table class="w-full text-left text-sm text-[#9da6b9]">
+<thead class="bg-[#1c1f27] text-xs uppercase font-semibold text-white sticky top-0 z-10">
+<tr>
+<th class="px-6 py-4" scope="col">Employee</th>
+<th class="px-6 py-4 text-right" scope="col">Gross Salary</th>
+<th class="px-6 py-4 text-right" scope="col">PF</th>
+<th class="px-6 py-4 text-right" scope="col">ESI</th>
+<th class="px-6 py-4 text-right" scope="col">PT</th>
+<th class="px-6 py-4 text-right" scope="col">LOP</th>
+<th class="px-6 py-4 text-right" scope="col">Total Ded.</th>
+<th class="px-6 py-4 text-right text-primary font-bold" scope="col">Net Pay</th>
+<th class="px-6 py-4 text-center" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#282e39] bg-[#111318]">
+<!-- Row 1 -->
+<tr class="hover:bg-[#1c1f27] transition-colors group">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="size-9 rounded-full bg-cover bg-center bg-gray-700" data-alt="Portrait of employee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDEM39DCP2G0Qx9skusUPD9FIvjQntQpozYQs3muOcvCxLYNEURZXJxEDr_dqoxFDD97ocAEApNG7KFtntR1Ms1S_HOveIhleFc_s1uSP7wzxjLNNaPm8hC2SCFu_slcxZrFAYzS5E-84PRBVLzc9Id7fi5kHLEy9b_47oo4qHZ7MsITHsZJYq8L7S-oxG-lqbzYKpGOv2rztMRma3yWuR2oaxhJvDVds9UDJzLjKE8O7yWFryesimEpeLvrLSwU7tVrCdR3TD0kXU");'></div>
+<div class="flex flex-col">
+<span>Robert Fox</span>
+<span class="text-xs text-gray-500 font-normal">ID: EMP-1024</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right tabular-nums">$5,400.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$240.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$45.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$20.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-gray-500">-</td>
+<td class="px-6 py-4 text-right tabular-nums font-medium text-white">$305.00</td>
+<td class="px-6 py-4 text-right tabular-nums font-bold text-primary bg-primary/5 group-hover:bg-primary/10 transition-colors border-l border-r border-transparent group-hover:border-[#282e39]">$5,095.00</td>
+<td class="px-6 py-4 text-center">
+<button class="text-gray-500 hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">edit_document</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-[#1c1f27] transition-colors group">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="size-9 rounded-full bg-cover bg-center bg-gray-700" data-alt="Portrait of employee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBDoFeKcH_-Yt4bBFBNn9JUo8OnhAoFvmawNmOQF8hdweL0jMH3SbxwaTrk7CUAVrMIp_zUv5YEvTg05kyu2BkjATCVmCihrX-SzNfgB0yfAOlfCaDSDAWxHN991_rkS5-KPW_Cki9gaW11npBpNUpEAEZs6-OylQRT_8hGAVGT6FTobCAzjsH3U8AC4XUmr-6DnQgxAxQPpmbwO6cvpcTrPWIOR9IM80IHpavgoiaY-QPv9e2DuH4b4oCoCGYIf2UkqZ59tlDrGWo");'></div>
+<div class="flex flex-col">
+<span>Darlene Robertson</span>
+<span class="text-xs text-gray-500 font-normal">ID: EMP-1089</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right tabular-nums">$6,200.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$280.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$55.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$20.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$200.00</td>
+<td class="px-6 py-4 text-right tabular-nums font-medium text-white">$555.00</td>
+<td class="px-6 py-4 text-right tabular-nums font-bold text-primary bg-primary/5 group-hover:bg-primary/10 transition-colors border-l border-r border-transparent group-hover:border-[#282e39]">$5,645.00</td>
+<td class="px-6 py-4 text-center">
+<button class="text-gray-500 hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">edit_document</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-[#1c1f27] transition-colors group">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="size-9 rounded-full bg-cover bg-center bg-gray-700" data-alt="Portrait of employee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCNOjKWGoZnsacx0yxFINQx7v5kKj5LUA1TfCbT3EXtYeWkaa33fsOU6MgFCMdpmdeVz3xwaZr_wYMp2WsekEYMCmoT7KgaZKnDd4XQvXkTn1kfh51ftSbQlJTXw4Y5n-WLg6ZGZpJBt0H_dxrUA1Qt69_UwCJP8bXFk0BUtWOeZ0BidStNbwYyo6K3AoGLZ23JvsXFEUsiAtlpQYSgPD64c-XuskOIUpIhZe90TDgg14E7BV8qbMe51JGtKjIR4K3hAROc-Dsm4fo");'></div>
+<div class="flex flex-col">
+<span>Theresa Webb</span>
+<span class="text-xs text-gray-500 font-normal">ID: EMP-0941</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right tabular-nums">$4,800.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$210.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$40.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$20.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-gray-500">-</td>
+<td class="px-6 py-4 text-right tabular-nums font-medium text-white">$270.00</td>
+<td class="px-6 py-4 text-right tabular-nums font-bold text-primary bg-primary/5 group-hover:bg-primary/10 transition-colors border-l border-r border-transparent group-hover:border-[#282e39]">$4,530.00</td>
+<td class="px-6 py-4 text-center">
+<button class="text-gray-500 hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">edit_document</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-[#1c1f27] transition-colors group">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="size-9 rounded-full bg-cover bg-center bg-gray-700" data-alt="Portrait of employee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdhVG5qTBmRPif_Iky4Zj4QnNGRydA_kkzL5zVtQxRrWwCcF4Nt_S2QPpe0_i7Pksk7FhQkH75etbdmhvNqCZ5-y3skZAYALo9cAylZJ4P_huD6UALYgZuesg2nHpiYwfOZuNPaQXQZlTeKe-Y3gT9shGMMVw03pFYsW8GUJtM6Pyz4RdIG1o10fp7Z9ObtUMI3jkov_sD0ZbaH_AhfRfso9-I8cpdDbK72R7YmJVmP1j9cvqEkWm6gWp25z3CpWDPw0bfT_r_6SQ");'></div>
+<div class="flex flex-col">
+<span>Cameron Williamson</span>
+<span class="text-xs text-gray-500 font-normal">ID: EMP-2231</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right tabular-nums">$7,500.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$350.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$65.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-red-400">-$20.00</td>
+<td class="px-6 py-4 text-right tabular-nums text-gray-500">-</td>
+<td class="px-6 py-4 text-right tabular-nums font-medium text-white">$435.00</td>
+<td class="px-6 py-4 text-right tabular-nums font-bold text-primary bg-primary/5 group-hover:bg-primary/10 transition-colors border-l border-r border-transparent group-hover:border-[#282e39]">$7,065.00</td>
+<td class="px-6 py-4 text-center">
+<button class="text-gray-500 hover:text-white transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">edit_document</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Summary & Actions -->
+<div class="w-80 border-l border-[#282e39] bg-[#171a21] flex flex-col flex-shrink-0 h-full overflow-y-auto">
+<div class="p-6 border-b border-[#282e39]">
+<h3 class="text-white text-lg font-bold mb-1">Financial Summary</h3>
+<p class="text-gray-500 text-sm">October 2023</p>
+</div>
+<div class="p-6 flex flex-col gap-6">
+<!-- Net Pay Card -->
+<div class="rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 p-5 border border-primary/20">
+<p class="text-primary text-sm font-medium mb-1 uppercase tracking-wide">Net Payable</p>
+<p class="text-white text-3xl font-bold tracking-tight mb-2">$22,335.00</p>
+<div class="flex items-center gap-2 text-xs text-primary/80">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+2.4% vs last month</span>
+</div>
+</div>
+<!-- Breakdown -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center pb-3 border-b border-[#282e39]">
+<span class="text-gray-400 text-sm">Total Employees</span>
+<span class="text-white font-medium">4</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-[#282e39]">
+<span class="text-gray-400 text-sm">Gross Salary</span>
+<span class="text-white font-medium">$23,900.00</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-[#282e39]">
+<span class="text-gray-400 text-sm">Total Deductions</span>
+<span class="text-red-400 font-medium">-$1,565.00</span>
+</div>
+<!-- Deductions Breakdown Mini -->
+<div class="mt-2 bg-[#1c1f27] rounded-lg p-3">
+<p class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Deductions Breakdown</p>
+<div class="space-y-2">
+<div class="flex justify-between text-xs">
+<span class="text-gray-400 flex items-center gap-1"><div class="size-2 rounded-full bg-blue-500"></div> PF</span>
+<span class="text-gray-300">$1,080.00</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-gray-400 flex items-center gap-1"><div class="size-2 rounded-full bg-purple-500"></div> ESI</span>
+<span class="text-gray-300">$205.00</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-gray-400 flex items-center gap-1"><div class="size-2 rounded-full bg-orange-500"></div> PT</span>
+<span class="text-gray-300">$80.00</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-gray-400 flex items-center gap-1"><div class="size-2 rounded-full bg-red-500"></div> LOP</span>
+<span class="text-gray-300">$200.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions Fixed at Bottom -->
+<div class="mt-auto p-6 border-t border-[#282e39] flex flex-col gap-3">
+<button class="w-full rounded-lg bg-[#282e39] text-white py-3 px-4 font-medium hover:bg-[#3b4354] transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">print</span>
+                         Generate All Payslips
+                    </button>
+<button class="w-full rounded-lg bg-primary text-white py-3 px-4 font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px] font-variation-settings-fill">payments</span>
+                         Process Payment
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

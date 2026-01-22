@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payroll Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1a2332",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for dark mode */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #111722;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #324467;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475e85;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white h-screen flex overflow-hidden">
+<!-- Side Navigation -->
+<aside class="w-64 bg-background-light dark:bg-[#111722] border-r border-slate-200 dark:border-[#232f48] flex flex-col justify-between shrink-0 transition-all duration-300">
+<div class="flex flex-col h-full">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="bg-primary/20 flex items-center justify-center rounded-lg w-10 h-10 text-primary">
+<span class="material-symbols-outlined text-2xl">payments</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">PayrollPro</h1>
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs font-medium">Enterprise Edition</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white group transition-colors" href="#">
+<span class="material-symbols-outlined filled">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-[#92a4c9] hover:bg-slate-200 dark:hover:bg-[#232f48] hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium">Employees</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-[#92a4c9] hover:bg-slate-200 dark:hover:bg-[#232f48] hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">attach_money</span>
+<p class="text-sm font-medium">Payroll</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-[#92a4c9] hover:bg-slate-200 dark:hover:bg-[#232f48] hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<p class="text-sm font-medium">Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-[#92a4c9] hover:bg-slate-200 dark:hover:bg-[#232f48] hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</a>
+</nav>
+</div>
+<div class="p-6 border-t border-slate-200 dark:border-[#232f48]">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-100 dark:bg-[#232f48] cursor-pointer">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8 h-8" data-alt="Portrait of a user" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3lQiVbxImk2TpEEStrgXUxHiwKH_ThG_mtCji9ourIT8uOAAgTFy0YQ2xMx_pOcj_RbFKJ14qtdkskGXboJLaFgGo0CcnIA-OiOgHNBOPmi0R442XIdVgf9Vrag2kp5KqHYJbb3qKNQGD2rI55MjyV040U0pJtItZhlaX7RxyfVzczEXdQkO7kKAGH2oQUAytIO6gUCtWebmfsfkJ_Tv94gqecUBO8Ume23pKyi0Bnh2PpzRILCkC955iJESMJdYz8OWRW7kMQBo");'></div>
+<div class="flex flex-col overflow-hidden">
+<p class="text-slate-900 dark:text-white text-sm font-medium truncate">Alex Morgan</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs truncate">Admin</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<div class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Top Header -->
+<header class="h-16 flex items-center justify-between px-8 border-b border-slate-200 dark:border-[#232f48] bg-background-light dark:bg-[#111722] shrink-0">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Dashboard</h2>
+<div class="flex items-center gap-6">
+<!-- Search Bar -->
+<div class="relative w-64 hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-[#92a4c9] text-[20px]">search</span>
+<input class="w-full bg-white dark:bg-[#232f48] border border-slate-300 dark:border-none text-slate-900 dark:text-white text-sm rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-slate-400 dark:placeholder:text-[#92a4c9]" placeholder="Search employees..." type="text"/>
+</div>
+<!-- Action Button -->
+<button class="flex items-center gap-2 bg-primary hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>
+<span>Run Payroll</span>
+</button>
+<!-- Notification Bell -->
+<button class="relative text-slate-500 dark:text-[#92a4c9] hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Dashboard Content -->
+<main class="flex-1 overflow-y-auto p-8 bg-background-light dark:bg-[#101622]">
+<div class="max-w-[1200px] mx-auto flex flex-col gap-6">
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Card 1 -->
+<div class="bg-white dark:bg-[#1a2332] rounded-xl p-6 border border-slate-200 dark:border-[#232f48] shadow-sm flex flex-col gap-2 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">payments</span>
+</div>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm font-medium z-10">Total Payroll Cost</p>
+<div class="flex items-end gap-3 z-10">
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white">$124,500</h3>
+<span class="flex items-center text-emerald-500 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-full mb-1">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                1.2%
+                            </span>
+</div>
+<p class="text-slate-400 dark:text-slate-500 text-xs mt-1 z-10">Compared to last month</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-[#1a2332] rounded-xl p-6 border border-slate-200 dark:border-[#232f48] shadow-sm flex flex-col gap-2 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">diversity_3</span>
+</div>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm font-medium z-10">Active Employees</p>
+<div class="flex items-end gap-3 z-10">
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white">48</h3>
+<span class="flex items-center text-emerald-500 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-full mb-1">
+<span class="material-symbols-outlined text-[14px] mr-0.5">add</span>
+                                2
+                            </span>
+</div>
+<p class="text-slate-400 dark:text-slate-500 text-xs mt-1 z-10">New hires this month</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-white dark:bg-[#1a2332] rounded-xl p-6 border border-slate-200 dark:border-[#232f48] shadow-sm flex flex-col gap-2 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">calendar_month</span>
+</div>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm font-medium z-10">Next Pay Date</p>
+<div class="flex items-end gap-3 z-10">
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white">Oct 31</h3>
+<span class="flex items-center text-amber-500 text-xs font-bold bg-amber-500/10 px-2 py-1 rounded-full mb-1">
+                                5 Days
+                            </span>
+</div>
+<p class="text-slate-400 dark:text-slate-500 text-xs mt-1 z-10">Approvals due by Oct 29</p>
+</div>
+</div>
+<!-- Main Section: Chart + Tasks -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Chart Section -->
+<div class="lg:col-span-2 bg-white dark:bg-[#1a2332] rounded-xl p-6 border border-slate-200 dark:border-[#232f48] shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="text-slate-900 dark:text-white font-semibold text-lg">Payroll Trends</h3>
+<p class="text-slate-500 dark:text-[#92a4c9] text-sm">Last 6 Months History</p>
+</div>
+<button class="text-primary text-sm font-medium hover:underline">View Full Report</button>
+</div>
+<!-- Chart Area -->
+<div class="relative w-full h-[250px] flex items-end gap-2 sm:gap-4 px-2">
+<!-- Grid Lines (Fake) -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none z-0">
+<div class="w-full h-px bg-slate-100 dark:bg-[#232f48]"></div>
+<div class="w-full h-px bg-slate-100 dark:bg-[#232f48]"></div>
+<div class="w-full h-px bg-slate-100 dark:bg-[#232f48]"></div>
+<div class="w-full h-px bg-slate-100 dark:bg-[#232f48]"></div>
+<div class="w-full h-px bg-slate-100 dark:bg-[#232f48]"></div>
+</div>
+<!-- SVG Chart -->
+<svg class="w-full h-full z-10 overflow-visible" preserveaspectratio="none" viewbox="0 0 800 250">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#135bec" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#135bec" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area Path -->
+<path d="M0,200 C100,200 120,150 200,140 C280,130 320,180 400,160 C480,140 520,60 600,80 C680,100 750,40 800,50 V250 H0 Z" fill="url(#chartGradient)"></path>
+<!-- Line Path -->
+<path d="M0,200 C100,200 120,150 200,140 C280,130 320,180 400,160 C480,140 520,60 600,80 C680,100 750,40 800,50" fill="none" stroke="#135bec" stroke-linecap="round" stroke-width="3" vector-effect="non-scaling-stroke"></path>
+<!-- Data Points -->
+<circle class="fill-white dark:fill-[#1a2332] stroke-primary stroke-[3px]" cx="200" cy="140" r="4"></circle>
+<circle class="fill-white dark:fill-[#1a2332] stroke-primary stroke-[3px]" cx="400" cy="160" r="4"></circle>
+<circle class="fill-white dark:fill-[#1a2332] stroke-primary stroke-[3px]" cx="600" cy="80" r="4"></circle>
+</svg>
+</div>
+<!-- X-Axis Labels -->
+<div class="flex justify-between mt-4 text-xs font-medium text-slate-400 dark:text-[#92a4c9] px-2">
+<span>May</span>
+<span>Jun</span>
+<span>Jul</span>
+<span>Aug</span>
+<span>Sep</span>
+<span>Oct</span>
+</div>
+</div>
+<!-- Pending Tasks List -->
+<div class="bg-white dark:bg-[#1a2332] rounded-xl p-6 border border-slate-200 dark:border-[#232f48] shadow-sm flex flex-col h-full">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-slate-900 dark:text-white font-semibold text-lg">Pending Tasks</h3>
+<span class="bg-primary/20 text-primary text-xs font-bold px-2 py-1 rounded-full">3 New</span>
+</div>
+<div class="flex flex-col gap-4 overflow-y-auto pr-2 custom-scrollbar flex-1">
+<!-- Task Item 1 -->
+<div class="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#232f48]/50 transition-colors group cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-[#232f48]">
+<div class="mt-1">
+<input class="w-5 h-5 rounded border-slate-300 dark:border-[#324467] text-primary focus:ring-primary dark:bg-transparent cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-white text-sm font-medium leading-tight">Approve John Doe's Overtime</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs mt-1">Request ID: #8832 • Due Today</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Task Item 2 -->
+<div class="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#232f48]/50 transition-colors group cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-[#232f48]">
+<div class="mt-1">
+<input class="w-5 h-5 rounded border-slate-300 dark:border-[#324467] text-primary focus:ring-primary dark:bg-transparent cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-white text-sm font-medium leading-tight">Review Q3 Bonus Report</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs mt-1">Pending Approval • Finance Dept</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Task Item 3 -->
+<div class="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#232f48]/50 transition-colors group cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-[#232f48]">
+<div class="mt-1">
+<input class="w-5 h-5 rounded border-slate-300 dark:border-[#324467] text-primary focus:ring-primary dark:bg-transparent cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-white text-sm font-medium leading-tight">Verify Tax Forms for New Hires</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs mt-1">2 Employees • High Priority</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Task Item 4 -->
+<div class="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#232f48]/50 transition-colors group cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-[#232f48]">
+<div class="mt-1">
+<input class="w-5 h-5 rounded border-slate-300 dark:border-[#324467] text-primary focus:ring-primary dark:bg-transparent cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-white text-sm font-medium leading-tight">Sign off on Oct 15 Payroll</p>
+<p class="text-slate-500 dark:text-[#92a4c9] text-xs mt-1">Due in 2 days</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<button class="w-full mt-4 py-2 text-sm text-center text-slate-500 dark:text-[#92a4c9] hover:text-primary border border-dashed border-slate-300 dark:border-[#324467] rounded-lg hover:border-primary hover:bg-slate-50 dark:hover:bg-[#232f48] transition-all">
+                            + Add New Task
+                        </button>
+</div>
+</div>
+<!-- Recent Activity Table (Optional Bonus) -->
+<div class="bg-white dark:bg-[#1a2332] rounded-xl border border-slate-200 dark:border-[#232f48] shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-[#232f48]">
+<h3 class="text-slate-900 dark:text-white font-semibold text-lg">Recent Transactions</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm text-slate-500 dark:text-[#92a4c9]">
+<thead class="bg-slate-50 dark:bg-[#111722] text-xs uppercase font-medium">
+<tr>
+<th class="px-6 py-4">Transaction ID</th>
+<th class="px-6 py-4">Date</th>
+<th class="px-6 py-4">Description</th>
+<th class="px-6 py-4">Amount</th>
+<th class="px-6 py-4">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-[#232f48]">
+<tr class="hover:bg-slate-50 dark:hover:bg-[#232f48]/50 transition-colors">
+<td class="px-6 py-4 font-mono text-xs">#TRX-9982</td>
+<td class="px-6 py-4">Oct 24, 2023</td>
+<td class="px-6 py-4 text-slate-900 dark:text-white font-medium">Monthly Payroll Run</td>
+<td class="px-6 py-4 font-medium">$122,400.00</td>
+<td class="px-6 py-4"><span class="bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded-full text-xs font-bold">Completed</span></td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-[#232f48]/50 transition-colors">
+<td class="px-6 py-4 font-mono text-xs">#TRX-9981</td>
+<td class="px-6 py-4">Oct 22, 2023</td>
+<td class="px-6 py-4 text-slate-900 dark:text-white font-medium">Reimbursement - Marketing</td>
+<td class="px-6 py-4 font-medium">$450.00</td>
+<td class="px-6 py-4"><span class="bg-amber-500/10 text-amber-500 px-2 py-1 rounded-full text-xs font-bold">Pending</span></td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-[#232f48]/50 transition-colors">
+<td class="px-6 py-4 font-mono text-xs">#TRX-9980</td>
+<td class="px-6 py-4">Oct 20, 2023</td>
+<td class="px-6 py-4 text-slate-900 dark:text-white font-medium">Contractor Payment - Design</td>
+<td class="px-6 py-4 font-medium">$1,200.00</td>
+<td class="px-6 py-4"><span class="bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded-full text-xs font-bold">Completed</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Employee Pay Stub Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "card-dark": "#161e2c",
+                        "card-darker": "#111722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better dark mode look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101622; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #232f48; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #34425e; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 border-r border-[#232f48] bg-[#111722] flex flex-col justify-between p-4 hidden lg:flex">
+<div class="flex flex-col gap-8">
+<div class="flex gap-3 items-center px-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg size-10" data-alt="Abstract blue geometric logo representing payroll finance" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBbkJMCOq8gWuMdDlFNwBWwPgRXTs1ZrOCWNATXxnGqyEKEMAvcl9GUZ58pv6udS_DGPs6cAQAiXVtgod_52iJ1SgNMouHEpuHIp1tojkbln4Tb0UYeDFaznvyoc680erZLOzQac3c5W-RAFqwU0dKHtsASvOIjFGOXUUB9oXGOllKIhvDdue2gT2c4QqhVKsioYI8ZciO0BLkb6MlSOUq6UkCKYhycWwos2hIWrdy8LH0qyQihVBe0mJhNjSjwl839cAzG051Y760");'>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-tight">PayRoll Pro</h1>
+<p class="text-[#92a4c9] text-xs font-normal">Admin Console</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92a4c9] hover:bg-[#232f48] hover:text-white transition-colors group" href="#">
+<span aria-hidden="true" class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/20 text-white transition-colors" href="#">
+<span aria-hidden="true" class="material-symbols-outlined text-[24px] fill-1">payments</span>
+<span class="text-sm font-medium">Payroll</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92a4c9] hover:bg-[#232f48] hover:text-white transition-colors" href="#">
+<span aria-hidden="true" class="material-symbols-outlined text-[24px]">group</span>
+<span class="text-sm font-medium">Employees</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92a4c9] hover:bg-[#232f48] hover:text-white transition-colors" href="#">
+<span aria-hidden="true" class="material-symbols-outlined text-[24px]">description</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#92a4c9] hover:bg-[#232f48] hover:text-white transition-colors" href="#">
+<span aria-hidden="true" class="material-symbols-outlined text-[24px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<div class="flex items-center gap-3 px-3 py-4 border-t border-[#232f48] mt-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8" data-alt="Portrait of user avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDpjS2nJembar0iX9pp7f456Ic3XwosLXOQGf19b3ArR5gHODX6fe9GD4RqiEuvMCN9FuOvguEAZBoewkxpBOxpb_ouT1yd5ousBqTibPAN9hTeHhoj2FSa-w_IFkQZZEzMJ5sQSIS46RsMzQs3uHpjkfMewbYlcdZfgApIebJORehpL4_dpxX8jC5IWhEHba-fjYaVvKh7maWLrC98PfotXvr6f4RI-z3hYGpRORWaBQ3A9j_FQp6aXF7LezagNaW7i21ZoWSv1sM");'>
+</div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-medium">Alex Morgan</p>
+<p class="text-[#92a4c9] text-xs">Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-[#232f48] px-6 py-4 bg-[#111722] z-10 shrink-0">
+<div class="flex items-center gap-4 lg:hidden">
+<button class="text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<div class="hidden lg:flex items-center gap-8 w-full">
+<!-- Search -->
+<div class="flex w-full max-w-md items-center h-10 rounded-lg bg-[#1c2536] border border-[#2e3b52] focus-within:border-primary transition-colors">
+<div class="pl-3 text-[#92a4c9] flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-white placeholder-[#5a6b89] text-sm focus:ring-0" placeholder="Search employees, payroll IDs..."/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-auto">
+<button class="size-10 flex items-center justify-center rounded-full text-[#92a4c9] hover:bg-[#232f48] hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-[#111722]"></span>
+</button>
+<button class="size-10 flex items-center justify-center rounded-full text-[#92a4c9] hover:bg-[#232f48] hover:text-white transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 lg:px-12 lg:py-8">
+<div class="max-w-[1200px] mx-auto flex flex-col gap-6">
+<!-- Breadcrumbs & Heading Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-2">
+<nav class="flex items-center text-sm text-[#92a4c9]">
+<a class="hover:text-white transition-colors" href="#">Payroll</a>
+<span class="mx-2">/</span>
+<a class="hover:text-white transition-colors" href="#">History</a>
+<span class="mx-2">/</span>
+<span class="text-white font-medium">Pay Stub #80432</span>
+</nav>
+<h1 class="text-3xl font-bold text-white tracking-tight">Pay Stub Detail</h1>
+<p class="text-[#92a4c9] text-sm">View and manage pay slip for Oct 30, 2023</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 h-10 rounded-lg bg-[#232f48] hover:bg-[#2e3b52] text-white text-sm font-medium transition-colors border border-[#364259]">
+<span class="material-symbols-outlined text-[20px]">print</span>
+<span>Print</span>
+</button>
+<button class="flex items-center gap-2 px-4 h-10 rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20 transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Download PDF</span>
+</button>
+</div>
+</div>
+<!-- Pay Stub Card -->
+<div class="bg-white dark:bg-[#161e2c] rounded-xl border border-gray-200 dark:border-[#232f48] shadow-sm overflow-hidden flex flex-col">
+<!-- Stub Header -->
+<div class="p-8 border-b border-gray-200 dark:border-[#232f48] bg-gray-50 dark:bg-[#1b2434]">
+<div class="flex flex-col md:flex-row justify-between gap-8">
+<!-- Company Info -->
+<div class="flex items-start gap-4">
+<div class="size-12 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-white text-[28px]">apartment</span>
+</div>
+<div>
+<h2 class="text-lg font-bold text-gray-900 dark:text-white">TechFlow Systems Inc.</h2>
+<p class="text-gray-500 dark:text-[#92a4c9] text-sm leading-relaxed mt-1">
+                                        4500 Innovation Drive, Suite 100<br/>
+                                        San Francisco, CA 94103<br/>
+                                        Tax ID: 99-1234567
+                                    </p>
+</div>
+</div>
+<!-- Pay Period Details -->
+<div class="flex flex-col items-start md:items-end gap-1">
+<span class="px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold uppercase tracking-wider border border-green-500/20">Paid</span>
+<div class="text-right mt-2">
+<p class="text-gray-500 dark:text-[#92a4c9] text-xs uppercase tracking-wide font-semibold">Pay Date</p>
+<p class="text-gray-900 dark:text-white font-medium">Oct 30, 2023</p>
+</div>
+<div class="text-right mt-2">
+<p class="text-gray-500 dark:text-[#92a4c9] text-xs uppercase tracking-wide font-semibold">Pay Period</p>
+<p class="text-gray-900 dark:text-white font-medium text-sm">Oct 01 - Oct 31, 2023</p>
+</div>
+</div>
+</div>
+<!-- Employee Info Grid -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6 p-4 rounded-lg border border-gray-200 dark:border-[#2e3b52] bg-white dark:bg-[#161e2c]">
+<div>
+<p class="text-gray-500 dark:text-[#5a6b89] text-xs uppercase tracking-wide font-semibold mb-1">Employee Name</p>
+<p class="text-gray-900 dark:text-white font-semibold">John Doe</p>
+</div>
+<div>
+<p class="text-gray-500 dark:text-[#5a6b89] text-xs uppercase tracking-wide font-semibold mb-1">Employee ID</p>
+<p class="text-gray-900 dark:text-white font-mono">#EMP-001</p>
+</div>
+<div>
+<p class="text-gray-500 dark:text-[#5a6b89] text-xs uppercase tracking-wide font-semibold mb-1">Designation</p>
+<p class="text-gray-900 dark:text-white">Software Engineer</p>
+</div>
+<div>
+<p class="text-gray-500 dark:text-[#5a6b89] text-xs uppercase tracking-wide font-semibold mb-1">Department</p>
+<p class="text-gray-900 dark:text-white">Engineering</p>
+</div>
+</div>
+</div>
+<!-- Financial Details -->
+<div class="flex flex-col lg:flex-row">
+<!-- Main Columns (Earnings & Deductions) -->
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-[#232f48]">
+<!-- Earnings -->
+<div class="p-8">
+<div class="flex items-center gap-2 mb-6">
+<div class="p-1.5 rounded bg-emerald-500/10 text-emerald-500">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+</div>
+<h3 class="text-base font-bold text-gray-900 dark:text-white uppercase tracking-wide">Earnings</h3>
+</div>
+<table class="w-full text-sm text-left">
+<thead class="text-xs text-gray-500 dark:text-[#5a6b89] uppercase bg-gray-50 dark:bg-[#1c2536]">
+<tr>
+<th class="px-3 py-2 rounded-l font-semibold">Pay Item</th>
+<th class="px-3 py-2 font-semibold text-right">Rate/Hrs</th>
+<th class="px-3 py-2 rounded-r font-semibold text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 dark:divide-[#232f48]">
+<tr>
+<td class="px-3 py-4 font-medium text-gray-900 dark:text-white">Basic Salary</td>
+<td class="px-3 py-4 text-right text-gray-500 dark:text-[#92a4c9]">-</td>
+<td class="px-3 py-4 text-right font-mono text-gray-900 dark:text-white">$5,000.00</td>
+</tr>
+<tr>
+<td class="px-3 py-4 font-medium text-gray-900 dark:text-white">Overtime</td>
+<td class="px-3 py-4 text-right text-gray-500 dark:text-[#92a4c9]">10 Hrs</td>
+<td class="px-3 py-4 text-right font-mono text-gray-900 dark:text-white">$750.00</td>
+</tr>
+<tr>
+<td class="px-3 py-4 font-medium text-gray-900 dark:text-white">Quarterly Bonus</td>
+<td class="px-3 py-4 text-right text-gray-500 dark:text-[#92a4c9]">-</td>
+<td class="px-3 py-4 text-right font-mono text-gray-900 dark:text-white">$1,200.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td class="px-3 pt-6 pb-2 text-right text-gray-500 dark:text-[#92a4c9] font-medium" colspan="2">Total Earnings</td>
+<td class="px-3 pt-6 pb-2 text-right font-bold font-mono text-emerald-600 dark:text-emerald-400 text-lg">$6,950.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Deductions -->
+<div class="p-8">
+<div class="flex items-center gap-2 mb-6">
+<div class="p-1.5 rounded bg-rose-500/10 text-rose-500">
+<span class="material-symbols-outlined text-[20px]">trending_down</span>
+</div>
+<h3 class="text-base font-bold text-gray-900 dark:text-white uppercase tracking-wide">Deductions</h3>
+</div>
+<table class="w-full text-sm text-left">
+<thead class="text-xs text-gray-500 dark:text-[#5a6b89] uppercase bg-gray-50 dark:bg-[#1c2536]">
+<tr>
+<th class="px-3 py-2 rounded-l font-semibold">Pay Item</th>
+<th class="px-3 py-2 rounded-r font-semibold text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 dark:divide-[#232f48]">
+<tr>
+<td class="px-3 py-4 font-medium text-gray-900 dark:text-white">Federal Tax</td>
+<td class="px-3 py-4 text-right font-mono text-gray-900 dark:text-white">$800.00</td>
+</tr>
+<tr>
+<td class="px-3 py-4 font-medium text-gray-900 dark:text-white">State Tax</td>
+<td class="px-3 py-4 text-right font-mono text-gray-900 dark:text-white">$340.00</td>
+</tr>
+<tr>
+<td class="px-3 py-4 font-medium text-gray-900 dark:text-white">Health Insurance</td>
+<td class="px-3 py-4 text-right font-mono text-gray-900 dark:text-white">$200.00</td>
+</tr>
+<tr>
+<td class="px-3 py-4 font-medium text-gray-900 dark:text-white">401k Retirement</td>
+<td class="px-3 py-4 text-right font-mono text-gray-900 dark:text-white">$250.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td class="px-3 pt-6 pb-2 text-right text-gray-500 dark:text-[#92a4c9] font-medium">Total Deductions</td>
+<td class="px-3 pt-6 pb-2 text-right font-bold font-mono text-rose-600 dark:text-rose-400 text-lg">$1,590.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<!-- YTD Summary Sidebar (within card) -->
+<div class="lg:w-72 bg-gray-50 dark:bg-[#131b29] border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-[#232f48] p-8 flex flex-col justify-between">
+<div>
+<h3 class="text-xs font-bold text-gray-500 dark:text-[#5a6b89] uppercase tracking-wide mb-6">Year To Date (YTD)</h3>
+<div class="space-y-6">
+<div>
+<p class="text-sm text-gray-500 dark:text-[#92a4c9] mb-1">YTD Gross</p>
+<p class="text-lg font-bold text-gray-900 dark:text-white font-mono">$69,500.00</p>
+<div class="h-1.5 w-full bg-gray-200 dark:bg-[#232f48] rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-emerald-500 w-[80%] rounded-full"></div>
+</div>
+</div>
+<div>
+<p class="text-sm text-gray-500 dark:text-[#92a4c9] mb-1">YTD Taxable</p>
+<p class="text-lg font-bold text-gray-900 dark:text-white font-mono">$62,500.00</p>
+</div>
+<div>
+<p class="text-sm text-gray-500 dark:text-[#92a4c9] mb-1">YTD Taxes</p>
+<p class="text-lg font-bold text-gray-900 dark:text-white font-mono">$15,900.00</p>
+<div class="h-1.5 w-full bg-gray-200 dark:bg-[#232f48] rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-rose-500 w-[23%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-gray-200 dark:border-[#232f48]">
+<div class="flex items-center gap-2 text-[#92a4c9] text-xs">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>Values updated on Oct 30</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Net Pay Highlight -->
+<div class="bg-primary p-6 md:p-8">
+<div class="flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-4 text-blue-100">
+<div class="p-3 bg-white/10 rounded-lg">
+<span class="material-symbols-outlined text-[32px]">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-sm font-medium opacity-90 uppercase tracking-wide">Net Pay Distribution</p>
+<p class="text-xs opacity-75">Direct Deposit to Chase Bank ****4589</p>
+</div>
+</div>
+<div class="text-center md:text-right">
+<p class="text-blue-100 text-sm font-medium uppercase tracking-widest mb-1">Net Pay Amount</p>
+<p class="text-4xl md:text-5xl font-black text-white font-mono tracking-tight">$5,360.00</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer disclaimer -->
+<div class="text-center pb-8 pt-2">
+<p class="text-[#5a6b89] text-xs">
+                        This is a system generated pay slip. For any discrepancies, please contact the payroll department at payroll@techflow.com.
+                    </p>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
