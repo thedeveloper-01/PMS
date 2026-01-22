@@ -81,3 +81,7 @@ class AttendanceService:
             'total_days': len(attendances)
         }
 
+    def delete_attendance(self, employee_id: str, att_date: date) -> bool:
+        """Delete attendance record"""
+        return self.repository.delete(employee_id, att_date)
+

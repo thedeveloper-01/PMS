@@ -85,5 +85,15 @@ class AttendanceRepository:
             return attendances
         except Exception as e:
             logger.error(f"Error getting employee attendance: {e}")
-            return []
+    def delete(self, employee_id: str, att_date: date) -> bool:
+        """Delete attendance record"""
+        try:
+            result = self.collection.delete_one({
+                'employee_id': employee_id,
+                'date': att_date.isoformat() if isinstance(att_date, date) else str(att_date)
+            })
+            return result.deleted_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting attendance: {e}")
+            return False
 

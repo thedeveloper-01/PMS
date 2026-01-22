@@ -110,3 +110,7 @@ class PayrollService:
         """Update payroll"""
         return self.repository.update(payroll)
 
+    def delete_payroll(self, employee_id: str, month: int, year: int) -> bool:
+        """Delete payroll record"""
+        return self.repository.delete(employee_id, month, year)
+

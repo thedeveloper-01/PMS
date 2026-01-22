@@ -15,6 +15,7 @@ from payroll_system.services.employee_service import EmployeeService
 from payroll_system.repository.master_data_repository import MasterDataRepository
 from payroll_system.models.employee import Employee
 from payroll_system.config import ROLE_ADMIN, ROLE_HR, ROLE_EMPLOYEE
+import re
 
 class EmployeeManagementWidget(QWidget):
     """Employee management widget"""
@@ -24,6 +25,10 @@ class EmployeeManagementWidget(QWidget):
         self.employee_service = EmployeeService()
         self.master_repo = MasterDataRepository()
         self.init_ui()
+        self.load_employees()
+
+    def refresh_data(self):
+        """Refresh data when tab is active"""
         self.load_employees()
 
     def init_ui(self):
@@ -47,14 +52,20 @@ class EmployeeManagementWidget(QWidget):
         
         # Search bar
         search_frame = QFrame()
-        search_frame.setObjectName("CardAlt")
+        search_frame.setStyleSheet("""
+            QFrame {
+                background: #0f172a;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+            }
+        """)
         search_frame.setFixedHeight(50)
         
         search_layout = QHBoxLayout(search_frame)
         search_layout.setContentsMargins(15, 0, 15, 0)
         
         search_icon = QLabel("🔍")
-        search_icon.setStyleSheet("font-size: 16px; color: #a0aec0;")
+        search_icon.setStyleSheet("font-size: 16px; color: #cbd5e1;")
         
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("Search by name, email, or ID...")
@@ -109,6 +120,7 @@ class EmployeeManagementWidget(QWidget):
         self.table.setShowGrid(False)
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.verticalHeader().setVisible(False)
+        self.table.verticalHeader().setDefaultSectionSize(70)  # Increase row height to 70px
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setSelectionMode(QTableWidget.SingleSelection)
         
@@ -137,6 +149,7 @@ class EmployeeManagementWidget(QWidget):
         self.table.setColumnWidth(5, 130)  # Designation
         self.table.setColumnWidth(6, 100)  # Role
         self.table.setColumnWidth(7, 120)  # Basic Salary
+        self.table.setColumnWidth(8, 220)  # Actions
         
         layout.addWidget(self.table, 1)
         
@@ -210,50 +223,26 @@ class EmployeeManagementWidget(QWidget):
                 # Actions
                 actions_widget = QWidget()
                 actions_layout = QHBoxLayout(actions_widget)
-                actions_layout.setContentsMargins(5, 2, 5, 2)
-                actions_layout.setSpacing(5)
+                actions_layout.setContentsMargins(5, 0, 5, 0)
+                actions_layout.setSpacing(12)
+                actions_layout.setAlignment(Qt.AlignCenter)
                 
                 # Edit button
                 edit_btn = QPushButton("Edit")
-                edit_btn.setFixedSize(60, 30)
-                edit_btn.setStyleSheet("""
-                    QPushButton {
-                        background: rgba(59, 130, 246, 0.1);
-                        color: #3b82f6;
-                        border: 1px solid rgba(59, 130, 246, 0.3);
-                        border-radius: 4px;
-                        font-size: 12px;
-                        font-weight: 500;
-                    }
-                    QPushButton:hover {
-                        background: rgba(59, 130, 246, 0.2);
-                        border: 1px solid rgba(59, 130, 246, 0.5);
-                    }
-                """)
+                edit_btn.setFixedSize(75, 32)
+                edit_btn.setCursor(Qt.PointingHandCursor)
+                edit_btn.setObjectName("InfoButton")
                 edit_btn.clicked.connect(lambda _, e=employee: self.edit_employee(e))
                 
                 # Delete button
                 delete_btn = QPushButton("Delete")
-                delete_btn.setFixedSize(60, 30)
-                delete_btn.setStyleSheet("""
-                    QPushButton {
-                        background: rgba(239, 68, 68, 0.1);
-                        color: #ef4444;
-                        border: 1px solid rgba(239, 68, 68, 0.3);
-                        border-radius: 4px;
-                        font-size: 12px;
-                        font-weight: 500;
-                    }
-                    QPushButton:hover {
-                        background: rgba(239, 68, 68, 0.2);
-                        border: 1px solid rgba(239, 68, 68, 0.5);
-                    }
-                """)
+                delete_btn.setFixedSize(75, 32)
+                delete_btn.setCursor(Qt.PointingHandCursor)
+                delete_btn.setObjectName("DangerButton")
                 delete_btn.clicked.connect(lambda _, e=employee: self.delete_employee(e))
                 
                 actions_layout.addWidget(edit_btn)
                 actions_layout.addWidget(delete_btn)
-                actions_layout.addStretch()
                 
                 self.table.setCellWidget(row, 8, actions_widget)
             
@@ -450,6 +439,15 @@ class EmployeeDialog(QDialog):
             'branch_id': self.branch_combo.currentData(),
             'role': self.role_combo.currentData(),
         }
+
+        # Validation
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", data['email']):
+            QMessageBox.warning(self, "Validation Error", "Please enter a valid email address.")
+            return
+
+        if not re.match(r"^\d{10}$", data['mobile_number']):
+            QMessageBox.warning(self, "Validation Error", "Mobile number must be exactly 10 digits.")
+            return
 
         if not self.employee:
             success, msg = self.employee_service.create_employee(data)

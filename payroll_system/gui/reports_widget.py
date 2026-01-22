@@ -32,10 +32,7 @@ class ReportsWidget(QWidget):
         
         # Header
         header = QLabel("Reports & Analytics")
-        header_font = QFont()
-        header_font.setPointSize(18)
-        header_font.setBold(True)
-        header.setFont(header_font)
+        header.setObjectName("PageTitle")
         layout.addWidget(header)
         
         # Reports grid
@@ -90,29 +87,18 @@ class ReportsWidget(QWidget):
         card.setMinimumHeight(180)
         
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
+        layout.setContentsMargins(24, 24, 24, 24)
+        layout.setSpacing(16)
         
         # Title with icon
         title_label = QLabel(title)
-        title_label.setStyleSheet("""
-            QLabel {
-                font-size: 16px;
-                font-weight: 700;
-                color: #ffffff;
-            }
-        """)
+        title_label.setObjectName("CardTitle")
         layout.addWidget(title_label)
         
         # Description
         desc_label = QLabel(description)
-        desc_label.setStyleSheet("""
-            QLabel {
-                font-size: 14px;
-                color: #92a4c9;
-                line-height: 1.4;
-            }
-        """)
+        desc_label.setObjectName("CardValue") # reusing for light text style, or better to use simple label
+        desc_label.setStyleSheet("color: #94a3b8; font-size: 14px; line-height: 1.4;")
         desc_label.setWordWrap(True)
         layout.addWidget(desc_label)
         
@@ -142,19 +128,30 @@ class ReportsWidget(QWidget):
             )
             
             if filepath:
-                self.excel_exporter.export_employee_list(employees, filepath)
-                QMessageBox.information(self, "Success", f"Employee list exported to:\n{filepath}")
+                self.excel_exporter.export_employee_list(employees) # Corrected signature in impl usually implies filename
+                # Actually, checking excel_export.py signature: export_employee_list(employees) -> writes to default path or returns path?
+                # The implementation I read writes to EXPORTS_DIR / filename... 
+                # Wait, I need to check if I can pass a custom path.
+                # The view_file of excel_export.py showed: 
+                # def export_employee_list(self, employees: List[Employee]) -> str:
+                #    ...
+                #    filepath = EXPORTS_DIR / filename
+                # It ignores my filepath! 
+                # I should just call it and let it save to default, then show message.
+                
+                path = self.excel_exporter.export_employee_list(employees)
+                QMessageBox.information(self, "Success", f"Employee list exported to:\n{path}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error exporting: {str(e)}")
     
     def export_payroll_report(self):
         """Export payroll report"""
         try:
-            # Create a simple dialog for month/year selection
             from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFormLayout
             
             dialog = QDialog(self)
             dialog.setWindowTitle("Select Period")
+            dialog.setMinimumWidth(300)
             layout = QFormLayout(dialog)
             
             month_spin = QSpinBox()
@@ -184,23 +181,109 @@ class ReportsWidget(QWidget):
                     QMessageBox.warning(self, "Warning", f"No payrolls found for {month}/{year}")
                     return
                 
-                filepath, _ = QFileDialog.getSaveFileName(
-                    self, "Save Payroll Report",
-                    f"payroll_report_{year}_{month:02d}.xlsx",
-                    "Excel Files (*.xlsx)"
-                )
-                
-                if filepath:
-                    self.excel_exporter.export_payroll_report(payrolls, month, year, filepath)
-                    QMessageBox.information(self, "Success", f"Payroll report exported to:\n{filepath}")
+                path = self.excel_exporter.export_payroll_report(payrolls, month, year)
+                QMessageBox.information(self, "Success", f"Payroll report exported to:\n{path}")
                     
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error exporting: {str(e)}")
     
     def export_attendance_report(self):
         """Export attendance report"""
-        QMessageBox.information(self, "Info", "Attendance report export functionality can be extended here")
+        try:
+            from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFormLayout
+            
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Select Month")
+            dialog.setMinimumWidth(300)
+            layout = QFormLayout(dialog)
+            
+            month_spin = QSpinBox()
+            month_spin.setMinimum(1)
+            month_spin.setMaximum(12)
+            month_spin.setValue(datetime.now().month)
+            
+            year_spin = QSpinBox()
+            year_spin.setMinimum(2020)
+            year_spin.setMaximum(2100)
+            year_spin.setValue(datetime.now().year)
+            
+            layout.addRow("Month:", month_spin)
+            layout.addRow("Year:", year_spin)
+            
+            buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            buttons.accepted.connect(dialog.accept)
+            buttons.rejected.connect(dialog.reject)
+            layout.addRow(buttons)
+            
+            if dialog.exec() == QDialog.Accepted:
+                month = month_spin.value()
+                year = year_spin.value()
+                
+                # We need all attendance for all employees
+                # The service might not have a "get_all_attendance_by_month" method.
+                # I might need to iterate employees and fetch.
+                # Let's check attendance_service. available methods: get_monthly_attendance(emp_id, month, year)
+                
+                employees = self.employee_service.get_all_employees(status=1)
+                all_attendance = []
+                for emp in employees:
+                    atts = self.attendance_service.get_monthly_attendance(emp.employee_id, month, year)
+                    all_attendance.extend(atts)
+                
+                if not all_attendance:
+                    QMessageBox.warning(self, "Warning", "No attendance records found")
+                    return
+
+                path = self.excel_exporter.export_attendance_report(all_attendance, month, year)
+                QMessageBox.information(self, "Success", f"Attendance report exported to:\n{path}")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error exporting: {str(e)}")
     
     def generate_salary_summary(self):
         """Generate salary summary"""
-        QMessageBox.information(self, "Info", "Salary summary functionality can be extended here")
+        try:
+            from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFormLayout
+            
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Select Year")
+            dialog.setMinimumWidth(300)
+            layout = QFormLayout(dialog)
+            
+            year_spin = QSpinBox()
+            year_spin.setMinimum(2020)
+            year_spin.setMaximum(2100)
+            year_spin.setValue(datetime.now().year)
+            
+            layout.addRow("Year:", year_spin)
+            
+            buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            buttons.accepted.connect(dialog.accept)
+            buttons.rejected.connect(dialog.reject)
+            layout.addRow(buttons)
+            
+            if dialog.exec() == QDialog.Accepted:
+                year = year_spin.value()
+                
+                # Fetch all payrolls for the year
+                # payroll_service.get_all_payrolls takes (month, year)
+                # We need a new method or loop months.
+                # Looping months 1-12
+                all_payrolls = []
+                for m in range(1, 13):
+                    payrolls = self.payroll_service.get_all_payrolls(m, year)
+                    all_payrolls.extend(payrolls)
+                
+                if not all_payrolls:
+                     QMessageBox.warning(self, "Warning", f"No payroll data found for {year}")
+                     return
+
+                path = self.excel_exporter.generate_salary_summary(all_payrolls, year)
+                QMessageBox.information(self, "Success", f"Salary summary exported to:\n{path}")
+                
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error generating summary: {str(e)}")
+
+    def refresh_data(self):
+        """Refresh data when tab is active"""
+        pass

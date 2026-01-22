@@ -50,6 +50,147 @@ class NavButton(QPushButton):
         self.update()
 
 
+from PySide6.QtWidgets import QStackedWidget, QGraphicsOpacityEffect
+from PySide6.QtCore import QPropertyAnimation, QEasingCurve, QParallelAnimationGroup
+
+class FadingStackedWidget(QStackedWidget):
+    """QStackedWidget with fade transition"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.fade_anim = None
+        
+    def setCurrentIndex(self, index: int):
+        """Fade to new index"""
+        current_idx = self.currentIndex()
+        if current_idx == index:
+            return
+            
+        # Get current and next widgets
+        current_widget = self.widget(current_idx)
+        next_widget = self.widget(index)
+        
+        if not current_widget or not next_widget:
+            super().setCurrentIndex(index)
+            return
+
+        # Ensure next widget is visible and sized correctly (but under current)
+        next_widget.setVisible(True)
+        next_widget.raise_() 
+        # Actually in StackedWidget, raise_() makes it the active one.
+        # We want to cross-fade.
+        
+        # Simplified approach to avoid Painter strictness:
+        # Just animate opacity of current out, then switch, then animate new in?
+        # That's sequential and might flicker.
+        
+        # Better robust approach: 
+        # 0. Cancel any running animation
+        if self.fade_anim and self.fade_anim.state() == QPropertyAnimation.Running:
+             self.fade_anim.stop()
+
+        # 1. Setup effects
+        effect_out = QGraphicsOpacityEffect(current_widget)
+        current_widget.setGraphicsEffect(effect_out)
+        
+        effect_in = QGraphicsOpacityEffect(next_widget)
+        next_widget.setGraphicsEffect(effect_in)
+        next_widget.setVisible(True)
+        
+        # 2. Animations
+        anim_out = QPropertyAnimation(effect_out, b"opacity")
+        anim_out.setDuration(250)
+        anim_out.setStartValue(1.0)
+        anim_out.setEndValue(0.0)
+        
+        anim_in = QPropertyAnimation(effect_in, b"opacity")
+        anim_in.setDuration(250)
+        anim_in.setStartValue(0.0)
+        anim_in.setEndValue(1.0)
+        
+        # 3. Group
+        group = QParallelAnimationGroup(self)
+        group.addAnimation(anim_out)
+        group.addAnimation(anim_in)
+        
+        def on_finished():
+            # Clean up
+            super(FadingStackedWidget, self).setCurrentIndex(index)
+            current_widget.graphicsEffect().setEnabled(False) # Disable effect to free painter
+            next_widget.graphicsEffect().setEnabled(False)
+            current_widget.setGraphicsEffect(None) # Remove correctly
+            next_widget.setGraphicsEffect(None)
+            
+        group.finished.connect(on_finished)
+        self.fade_anim = group
+        self.fade_anim.start()
+
+        # Hack: StackedWidget insists on showing only one. 
+        # To show both during animation, we might need to bypass it or toggle quickly.
+        # Standard QStackedWidget isn't built for cross-fading children easily.
+        # A safer fallback if this causes issues:
+        super().setCurrentIndex(index) # Just switch immediately if complex.
+        
+        # ACTUALLY, the "Painter not active" is usually because we are trying to paint on a widget
+        # that isn't fully ready or in a weird state.
+        
+        # Let's try a safer Sequential transition (Fade Out -> Switch -> Fade In)
+        # This completely avoids 2 widgets painting at once.
+        pass
+
+    def setCurrentIndex(self, index: int):
+        """Fade Out -> Switch -> Fade In sequence to avoid Painter errors"""
+        # Stop any running animation and cleanup
+        if self.fade_anim and self.fade_anim.state() == QPropertyAnimation.Running:
+            self.fade_anim.stop()
+        
+        # Ensure all widgets are clean (opacity 1, no effects)
+        for i in range(self.count()):
+            widget = self.widget(i)
+            if widget and widget.graphicsEffect():
+                widget.setGraphicsEffect(None)
+                
+        current_idx = self.currentIndex()
+        if current_idx == index:
+            return
+            
+        current_widget = self.widget(current_idx)
+        next_widget = self.widget(index)
+
+        # Step 1: Fade Out Current
+        effect_out = QGraphicsOpacityEffect(current_widget)
+        current_widget.setGraphicsEffect(effect_out)
+        anim_out = QPropertyAnimation(effect_out, b"opacity")
+        anim_out.setDuration(150)
+        anim_out.setStartValue(1.0)
+        anim_out.setEndValue(0.0)
+        anim_out.setEasingCurve(QEasingCurve.OutQuad)
+        
+        def switch_page():
+            # Step 2: Switch Page
+            super(FadingStackedWidget, self).setCurrentIndex(index)
+            current_widget.setGraphicsEffect(None) # Clean up previous
+            
+            # Step 3: Fade In Next
+            effect_in = QGraphicsOpacityEffect(next_widget)
+            next_widget.setGraphicsEffect(effect_in)
+            anim_in = QPropertyAnimation(effect_in, b"opacity")
+            anim_in.setDuration(200)
+            anim_in.setStartValue(0.0)
+            anim_in.setEndValue(1.0)
+            anim_in.setEasingCurve(QEasingCurve.InQuad)
+            
+            def cleanup():
+                next_widget.setGraphicsEffect(None)
+            
+            anim_in.finished.connect(cleanup)
+            self.fade_anim = anim_in
+            self.fade_anim.start()
+
+        anim_out.finished.connect(switch_page)
+        self.fade_anim = anim_out
+        self.fade_anim.start()
+
 class MainWindow(QMainWindow):
     """Main application window with navigation"""
     
@@ -94,7 +235,7 @@ class MainWindow(QMainWindow):
         content_layout.setSpacing(0)
 
         # Content area
-        self.stacked_widget = QStackedWidget()
+        self.stacked_widget = FadingStackedWidget()
         self.stacked_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         content_layout.addWidget(self.stacked_widget)
         content_wrap.setLayout(content_layout)
@@ -130,11 +271,11 @@ class MainWindow(QMainWindow):
         sidebar = QFrame()
         sidebar.setStyleSheet("""
             QFrame {
-                background: #111827;
-                border-right: 1px solid #374151;
+                background: #1e293b;
+                border-right: 1px solid rgba(255, 255, 255, 0.08);
             }
         """)
-        sidebar.setFixedWidth(280)
+        sidebar.setFixedWidth(300)
         
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -145,13 +286,13 @@ class MainWindow(QMainWindow):
         brand_frame.setStyleSheet("""
             QFrame {
                 background: transparent;
-                border-bottom: 1px solid #374151;
-                padding: 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 20px 12px;
             }
         """)
         brand_layout = QHBoxLayout(brand_frame)
-        brand_layout.setContentsMargins(15, 15, 15, 15)
-        brand_layout.setSpacing(15)
+        brand_layout.setContentsMargins(0, 0, 0, 0)
+        brand_layout.setSpacing(12)
         
         # Logo/Icon
         logo_label = QLabel("💰")
@@ -159,34 +300,37 @@ class MainWindow(QMainWindow):
             QLabel {
                 font-size: 24px;
                 background: rgba(59, 130, 246, 0.2);
-                border-radius: 10px;
-                padding: 10px;
+                border-radius: 12px;
+                padding: 6px;
+                qproperty-alignment: AlignCenter;
             }
         """)
         logo_label.setFixedSize(50, 50)
-        logo_label.setAlignment(Qt.AlignCenter)
         
         # App name and role
         text_frame = QFrame()
+        text_frame.setStyleSheet("background: transparent; border: none;")
         text_layout = QVBoxLayout(text_frame)
         text_layout.setContentsMargins(0, 0, 0, 0)
-        text_layout.setSpacing(2)
+        text_layout.setSpacing(4)
         
         app_label = QLabel("PayMaster")
         app_label.setStyleSheet("""
             QLabel {
                 font-size: 18px;
-                font-weight: 700;
-                color: #ffffff;
+                font-weight: 800;
+                color: #f8fafc;
+                background: transparent;
             }
         """)
         
         role_label = QLabel(ROLE_NAMES.get(self.current_employee.role, "Employee"))
         role_label.setStyleSheet("""
             QLabel {
-                font-size: 12px;
-                color: #9ca3af;
+                font-size: 13px;
+                color: #94a3b8;
                 font-weight: 500;
+                background: transparent;
             }
         """)
         
@@ -204,12 +348,13 @@ class MainWindow(QMainWindow):
         nav_frame.setStyleSheet("""
             QFrame {
                 background: transparent;
-                padding: 20px 15px;
+                border: none;
+                padding: 20px 16px;
             }
         """)
         nav_layout = QVBoxLayout(nav_frame)
-        nav_layout.setContentsMargins(10, 10, 10, 10)
-        nav_layout.setSpacing(5)
+        nav_layout.setContentsMargins(0, 0, 0, 0)
+        nav_layout.setSpacing(6)
         
         # Navigation buttons based on role
         if self.current_employee.role in [ROLE_ADMIN, ROLE_HR]:
@@ -231,7 +376,7 @@ class MainWindow(QMainWindow):
         
         for icon_text, index in nav_items:
             btn = NavButton(icon_text)
-            btn.setFixedHeight(45)
+            btn.setFixedHeight(48)
             btn.clicked.connect(lambda checked=False, idx=index: self.navigate_to(idx))
             nav_layout.addWidget(btn)
             self._nav_buttons[index] = btn
@@ -244,34 +389,32 @@ class MainWindow(QMainWindow):
         logout_frame.setStyleSheet("""
             QFrame {
                 background: transparent;
-                border-top: 1px solid #374151;
-                padding: 15px;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                border-right: none;
+                padding: 20px;
             }
         """)
         logout_layout = QHBoxLayout(logout_frame)
-        logout_layout.setContentsMargins(15, 10, 15, 10)
+        logout_layout.setContentsMargins(0, 0, 0, 0)
         
         logout_btn = QPushButton("🚪 Sign Out")
+        logout_btn.setObjectName("NavButton") # Re-use generic nav styling for hover
         logout_btn.setStyleSheet("""
             QPushButton {
-                background: transparent;
-                border: none;
-                border-radius: 8px;
-                padding: 10px 15px;
                 text-align: left;
-                color: #9ca3af;
-                font-weight: 600;
-                font-size: 14px;
+                color: #94a3b8;
+                padding: 10px 16px;
+                border: 1px solid rgba(255,255,255,0.05);
             }
             QPushButton:hover {
+                color: #ef4444;
                 background: rgba(239, 68, 68, 0.1);
-                color: #fca5a5;
+                border: 1px solid rgba(239, 68, 68, 0.2);
             }
         """)
         logout_btn.setCursor(Qt.PointingHandCursor)
         logout_btn.clicked.connect(self.logout)
         logout_layout.addWidget(logout_btn)
-        logout_layout.addStretch()
         
         layout.addWidget(logout_frame)
         
@@ -283,22 +426,24 @@ class MainWindow(QMainWindow):
         top = QFrame()
         top.setStyleSheet("""
             QFrame {
-                background: #1f2937;
-                border-bottom: 1px solid #374151;
+                background: #1e293b;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             }
         """)
-        top.setFixedHeight(70)
+        top.setFixedHeight(80)
         lay = QHBoxLayout()
-        lay.setContentsMargins(25, 0, 25, 0)
-        lay.setSpacing(20)
+        lay.setContentsMargins(32, 0, 32, 0)
+        lay.setSpacing(24)
 
         # Page title
         self.page_title = QLabel("Dashboard Overview")
         self.page_title.setStyleSheet("""
             QLabel {
-                font-size: 18px;
+                font-size: 24px;
                 font-weight: 700;
-                color: #ffffff;
+                color: #f8fafc;
+                background: transparent;
+                border: none;
             }
         """)
         lay.addWidget(self.page_title)
@@ -307,30 +452,37 @@ class MainWindow(QMainWindow):
 
         # Search bar
         search_frame = QFrame()
-        search_frame.setObjectName("CardAlt")
-        search_frame.setFixedHeight(40)
+        search_frame.setStyleSheet("""
+            QFrame {
+                background: #0f172a;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+            }
+        """)
+        search_frame.setFixedHeight(44)
         
         search_layout = QHBoxLayout(search_frame)
         search_layout.setContentsMargins(12, 0, 12, 0)
+        search_layout.setSpacing(10)
         
         search_icon = QLabel("🔍")
-        search_icon.setStyleSheet("color: #9ca3af; font-size: 14px;")
+        search_icon.setStyleSheet("color: #64748b; font-size: 14px; background: transparent; border: none;")
         
         self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("Search employees...")
+        self.search_input.setPlaceholderText("Search...")
         self.search_input.setStyleSheet("""
             QLineEdit {
                 background: transparent;
                 border: none;
-                color: #ffffff;
+                color: #f8fafc;
                 font-size: 14px;
-                padding: 8px;
+                padding: 0;
             }
             QLineEdit::placeholder {
-                color: #9ca3af;
+                color: #64748b;
             }
         """)
-        self.search_input.setFixedWidth(250)
+        self.search_input.setFixedWidth(240)
         
         search_layout.addWidget(search_icon)
         search_layout.addWidget(self.search_input)
@@ -338,21 +490,40 @@ class MainWindow(QMainWindow):
 
         # User info
         user_frame = QFrame()
-        user_frame.setStyleSheet("background: transparent;")
+        user_frame.setStyleSheet("background: transparent; border: none;")
         
         user_layout = QVBoxLayout(user_frame)
         user_layout.setContentsMargins(0, 0, 0, 0)
-        user_layout.setSpacing(2)
+        user_layout.setSpacing(4)
+        user_layout.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
         user_name = QLabel(self.current_employee.employee_name)
-        user_name.setStyleSheet("color: #ffffff; font-size: 14px; font-weight: 600;")
+        user_name.setStyleSheet("color: #f8fafc; font-size: 14px; font-weight: 600; background: transparent;")
+        user_name.setAlignment(Qt.AlignRight)
         
         user_role = QLabel(ROLE_NAMES.get(self.current_employee.role, 'Employee'))
-        user_role.setStyleSheet("color: #9ca3af; font-size: 12px;")
+        user_role.setStyleSheet("color: #94a3b8; font-size: 12px; background: transparent;")
+        user_role.setAlignment(Qt.AlignRight)
         
         user_layout.addWidget(user_name)
         user_layout.addWidget(user_role)
         lay.addWidget(user_frame)
+        
+        # User Avatar (Circle)
+        avatar = QLabel(self.current_employee.employee_name[0])
+        avatar.setFixedSize(40, 40)
+        avatar.setAlignment(Qt.AlignCenter)
+        avatar.setStyleSheet("""
+            QLabel {
+                background: #3b82f6;
+                color: white;
+                font-weight: bold;
+                font-size: 16px;
+                border-radius: 20px;
+                border: 2px solid #1e293b;
+            }
+        """)
+        lay.addWidget(avatar)
 
         top.setLayout(lay)
         return top
@@ -362,6 +533,11 @@ class MainWindow(QMainWindow):
         self.stacked_widget.setCurrentIndex(index)
         self._set_active_nav(index)
         self._set_title_for_index(index)
+
+        # Refresh data on the new page
+        widget = self.stacked_widget.widget(index)
+        if hasattr(widget, 'refresh_data'):
+            widget.refresh_data()
 
     def _set_active_nav(self, index: int) -> None:
         for idx, btn in self._nav_buttons.items():

@@ -27,6 +27,22 @@ class MasterDataRepository:
             logger.error(f"Error creating department: {e}")
             return False
     
+    def get_department(self, department_id: str) -> Optional[Department]:
+        try:
+            data = self.departments.find_one({'department_id': department_id})
+            if data:
+                return Department(
+                    department_id=data['department_id'],
+                    department_name=data['department_name'],
+                    created_date=data.get('created_date'),
+                    modified_date=data.get('modified_date'),
+                    status=data.get('status', 1)
+                )
+            return None
+        except Exception as e:
+            logger.error(f"Error getting department: {e}")
+            return None
+
     def get_all_departments(self) -> List[Department]:
         try:
             departments = []
@@ -52,6 +68,23 @@ class MasterDataRepository:
             logger.error(f"Error creating designation: {e}")
             return False
     
+    def get_designation(self, designation_id: str) -> Optional[Designation]:
+        try:
+            data = self.designations.find_one({'designation_id': designation_id})
+            if data:
+                return Designation(
+                    designation_id=data['designation_id'],
+                    designation_name=data['designation_name'],
+                    department_name=data['department_name'],
+                    created_date=data.get('created_date'),
+                    modified_date=data.get('modified_date'),
+                    status=data.get('status', 1)
+                )
+            return None
+        except Exception as e:
+            logger.error(f"Error getting designation: {e}")
+            return None
+
     def get_all_designations(self) -> List[Designation]:
         try:
             designations = []
@@ -160,4 +193,60 @@ class MasterDataRepository:
         except Exception as e:
             logger.error(f"Error getting holidays: {e}")
             return []
+
+    # Delete operations
+    def delete_department(self, department_id: str) -> bool:
+        try:
+            result = self.departments.update_one(
+                {'department_id': department_id},
+                {'$set': {'status': 0}}
+            )
+            return result.modified_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting department: {e}")
+            return False
+
+    def delete_designation(self, designation_id: str) -> bool:
+        try:
+            result = self.designations.update_one(
+                {'designation_id': designation_id},
+                {'$set': {'status': 0}}
+            )
+            return result.modified_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting designation: {e}")
+            return False
+
+    def delete_branch(self, branch_id: str) -> bool:
+        try:
+            result = self.branches.update_one(
+                {'branch_id': branch_id},
+                {'$set': {'status': 0}}
+            )
+            return result.modified_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting branch: {e}")
+            return False
+
+    def delete_shift(self, shift_id: str) -> bool:
+        try:
+            result = self.shifts.update_one(
+                {'shift_id': shift_id},
+                {'$set': {'status': 0}}
+            )
+            return result.modified_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting shift: {e}")
+            return False
+
+    def delete_holiday(self, holiday_id: str) -> bool:
+        try:
+            result = self.holidays.update_one(
+                {'holiday_id': holiday_id},
+                {'$set': {'status': 0}}
+            )
+            return result.modified_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting holiday: {e}")
+            return False
 

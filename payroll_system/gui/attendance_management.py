@@ -18,6 +18,13 @@ class AttendanceManagementWidget(QWidget):
         self.employee_service = EmployeeService()
         self.init_ui()
     
+    def refresh_data(self):
+        """Refresh data when tab is active"""
+        self.load_employees()
+        # Optionally reload table if inputs are set
+        if self.employee_combo.currentData():
+            self.view_attendance()
+    
     def init_ui(self):
         """Initialize UI"""
         layout = QVBoxLayout()
@@ -26,10 +33,7 @@ class AttendanceManagementWidget(QWidget):
         
         # Header
         header = QLabel("Attendance Management")
-        header_font = QFont()
-        header_font.setPointSize(18)
-        header_font.setBold(True)
-        header.setFont(header_font)
+        header.setObjectName("PageTitle")
         layout.addWidget(header)
         
         # Toolbar
@@ -75,12 +79,17 @@ class AttendanceManagementWidget(QWidget):
         # Table styling
         self.table.setAlternatingRowColors(True)
         self.table.setShowGrid(False)
-        self.table.horizontalHeader().setStretchLastSection(True)
         self.table.verticalHeader().setVisible(False)
+        self.table.verticalHeader().setDefaultSectionSize(70)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         
-        # Header styling
+        # Header resize policies
         header = self.table.horizontalHeader()
+        header.setStretchLastSection(False)
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(4, QHeaderView.Fixed)
+        self.table.setColumnWidth(4, 250)
+        
         header.setDefaultAlignment(Qt.AlignLeft)
         
         layout.addWidget(self.table)
@@ -89,11 +98,19 @@ class AttendanceManagementWidget(QWidget):
     
     def load_employees(self):
         """Load employees into combo"""
+        current_id = self.employee_combo.currentData()
         employees = self.employee_service.get_all_employees(status=1)
         self.employee_combo.clear()
         self.employee_combo.addItem("Select Employee", None)
-        for emp in employees:
+        
+        index_to_set = 0
+        for i, emp in enumerate(employees):
             self.employee_combo.addItem(f"{emp.employee_id} - {emp.employee_name}", emp.employee_id)
+            if current_id and emp.employee_id == current_id:
+                index_to_set = i + 1  # +1 because of "Select Employee" item
+        
+        if index_to_set > 0:
+            self.employee_combo.setCurrentIndex(index_to_set)
     
     def mark_attendance(self):
         """Open mark attendance dialog"""
@@ -148,58 +165,32 @@ class AttendanceManagementWidget(QWidget):
                 # Action buttons
                 actions_widget = QWidget()
                 actions_layout = QHBoxLayout(actions_widget)
-                actions_layout.setContentsMargins(4, 4, 4, 4)
-                actions_layout.setSpacing(4)
+                actions_layout.setContentsMargins(5, 0, 5, 0)
+                actions_layout.setSpacing(12)
+                actions_layout.setAlignment(Qt.AlignCenter)
                 
-                # Mark LOP button
                 if att.status != "LOP":
-                    lop_btn = QPushButton("Mark LOP")
-                    lop_btn.setStyleSheet("""
-                        QPushButton {
-                            background: rgba(245,158,11,0.10);
-                            color: #fbbf24;
-                            border: 1px solid rgba(245,158,11,0.20);
-                            border-radius: 6px;
-                            padding: 4px 10px;
-                            font-size: 12px;
-                            font-weight: 600;
-                        }
-                        QPushButton:hover {
-                            background: rgba(245,158,11,0.20);
-                            border: 1px solid rgba(245,158,11,0.40);
-                        }
-                    """)
+                    lop_btn = QPushButton("Mark Loss")
+                    lop_btn.setCursor(Qt.PointingHandCursor)
+                    lop_btn.setObjectName("WarningButton")
+                    lop_btn.setFixedSize(100, 32) # Standardize size
                     lop_btn.clicked.connect(lambda checked, eid=employee_id, d=att_date: 
                                            self.mark_lop(eid, d))
                     actions_layout.addWidget(lop_btn)
                 
                 # Delete button
-                delete_btn = QPushButton("🗑️")
+                delete_btn = QPushButton("Del")
                 delete_btn.setToolTip("Delete Record")
-                delete_btn.setStyleSheet("""
-                    QPushButton {
-                        background: rgba(239,68,68,0.10);
-                        color: #fca5a5;
-                        border: 1px solid rgba(239,68,68,0.20);
-                        border-radius: 6px;
-                        padding: 4px;
-                        font-size: 12px;
-                    }
-                    QPushButton:hover {
-                        background: rgba(239,68,68,0.20);
-                        border: 1px solid rgba(239,68,68,0.40);
-                    }
-                """)
-                delete_btn.setFixedSize(30, 30)
+                delete_btn.setFixedSize(60, 32)
+                delete_btn.setCursor(Qt.PointingHandCursor)
+                delete_btn.setObjectName("DangerButton")
                 delete_btn.clicked.connect(lambda checked, eid=employee_id, d=att_date: 
                                            self.delete_attendance(eid, d))
                 actions_layout.addWidget(delete_btn)
                 
-                actions_layout.addStretch()
                 self.table.setCellWidget(row, 4, actions_widget)
                 
-            # Resize columns
-            self.table.resizeColumnsToContents()
+            # self.table.resizeColumnsToContents() # Removed to prevent layout collapse
             
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading attendance: {str(e)}")

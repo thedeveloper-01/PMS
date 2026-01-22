@@ -77,5 +77,16 @@ class PayrollRepository:
             return payrolls
         except Exception as e:
             logger.error(f"Error getting employee payrolls: {e}")
-            return []
+    def delete(self, employee_id: str, month: int, year: int) -> bool:
+        """Delete payroll record"""
+        try:
+            result = self.collection.delete_one({
+                'employee_id': employee_id,
+                'month': month,
+                'year': year
+            })
+            return result.deleted_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting payroll: {e}")
+            return False
 

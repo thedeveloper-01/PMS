@@ -4,9 +4,9 @@ Dashboard widget showing statistics and overview
 """
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                                QGridLayout, QFrame, QScrollArea, QSizePolicy,
-                               QSpacerItem)
+                               QSpacerItem, QGraphicsDropShadowEffect)
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QColor
 from payroll_system.models.employee import Employee
 from payroll_system.repository.employee_repository import EmployeeRepository
 from payroll_system.repository.master_data_repository import MasterDataRepository
@@ -33,31 +33,14 @@ class DashboardWidget(QWidget):
         # Create scroll area
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setStyleSheet("""
-            QScrollArea {
-                border: none;
-                background: transparent;
-            }
-            QScrollBar:vertical {
-                width: 8px;
-                background: transparent;
-            }
-            QScrollBar::handle:vertical {
-                background: #4a5568;
-                border-radius: 4px;
-                min-height: 20px;
-            }
-            QScrollBar::handle:vertical:hover {
-                background: #718096;
-            }
-        """)
         
         # Content widget
         content_widget = QWidget()
         content_layout = QVBoxLayout(content_widget)
-        content_layout.setSpacing(30)
-        content_layout.setContentsMargins(40, 30, 40, 40)
+        content_layout.setSpacing(24)
+        content_layout.setContentsMargins(32, 24, 32, 24)
         
         # Welcome section
         welcome_section = self.create_welcome_section()
@@ -75,113 +58,110 @@ class DashboardWidget(QWidget):
     def create_welcome_section(self):
         """Create welcome section"""
         section = QFrame()
-        section.setObjectName("Card")
+        # section.setObjectName("Surface") # Removed to blend with background
         
         layout = QVBoxLayout(section)
-        layout.setSpacing(10)
-        layout.setContentsMargins(30, 30, 30, 30)
+        layout.setSpacing(4)
+        layout.setContentsMargins(0, 0, 0, 10)
         
         # Welcome message
-        welcome_label = QLabel(f"👋 Welcome back, {self.employee.employee_name}!")
-        welcome_label.setStyleSheet("""
-            QLabel {
-                font-size: 24px;
-                font-weight: 700;
-                color: #ffffff;
-            }
-        """)
+        welcome_label = QLabel(f"Welcome back, {self.employee.employee_name}")
+        welcome_label.setObjectName("PageTitle")
         layout.addWidget(welcome_label)
         
         # Date
         date_label = QLabel(datetime.now().strftime("%A, %B %d, %Y"))
-        date_label.setStyleSheet("""
-            QLabel {
-                font-size: 16px;
-                color: #a0aec0;
-                margin-top: 5px;
-            }
-        """)
+        date_label.setObjectName("PageSubtitle")
         layout.addWidget(date_label)
         
         return section
     
     def create_statistics_section(self):
         """Create statistics section"""
-        section = QFrame()
-        
+        section = QWidget()
         layout = QVBoxLayout(section)
-        layout.setSpacing(20)
+        layout.setSpacing(16)
         layout.setContentsMargins(0, 0, 0, 0)
         
         # Section title
-        title = QLabel("System Statistics")
-        title.setStyleSheet("""
-            QLabel {
-                font-size: 20px;
-                font-weight: 700;
-                color: #ffffff;
-            }
-        """)
+        title = QLabel("Overview")
+        title.setObjectName("SectionTitle")
         layout.addWidget(title)
         
         # Statistics grid
         grid = QGridLayout()
-        grid.setSpacing(20)
+        grid.setSpacing(16)
         grid.setContentsMargins(0, 0, 0, 0)
         
         # Create stat cards
-        self.employee_card = self.create_stat_card("Total Employees", "1", "#3b82f6")
-        self.department_card = self.create_stat_card("Departments", "1", "#10b981")
-        self.designation_card = self.create_stat_card("Designations", "0", "#a855f7")
-        self.branch_card = self.create_stat_card("Branches", "1", "#f97316")
-        self.shift_card = self.create_stat_card("Active Shifts", "1", "#06b6d4")
-        self.holiday_card = self.create_stat_card("Upcoming Holidays", "0", "#f59e0b")
+        self.employee_card = self.create_stat_card("Total Employees", "...", "#3b82f6", "👥")
+        self.department_card = self.create_stat_card("Departments", "...", "#10b981", "🏢")
+        self.designation_card = self.create_stat_card("Designations", "...", "#a855f7", "💼")
+        self.branch_card = self.create_stat_card("Branches", "...", "#f97316", "📍")
+        self.shift_card = self.create_stat_card("Active Shifts", "...", "#06b6d4", "🕒")
+        self.holiday_card = self.create_stat_card("Holidays", "...", "#f59e0b", "📅")
         
-        # Add to grid (2 columns, 3 rows)
+        # Add to grid (3 columns, 2 rows)
         grid.addWidget(self.employee_card, 0, 0)
         grid.addWidget(self.department_card, 0, 1)
-        grid.addWidget(self.designation_card, 1, 0)
-        grid.addWidget(self.branch_card, 1, 1)
-        grid.addWidget(self.shift_card, 2, 0)
-        grid.addWidget(self.holiday_card, 2, 1)
+        grid.addWidget(self.designation_card, 0, 2)
+        grid.addWidget(self.branch_card, 1, 0)
+        grid.addWidget(self.shift_card, 1, 1)
+        grid.addWidget(self.holiday_card, 1, 2)
         
         layout.addLayout(grid)
         
         return section
     
-    def create_stat_card(self, title: str, value: str, color: str):
+    def create_stat_card(self, title: str, value: str, color: str, icon_name: str = ""):
         """Create a statistics card"""
         card = QFrame()
-        card.setObjectName("Card")
-        card.setMinimumHeight(120)
+        card.setObjectName("StatCard")
+        card.setMinimumHeight(130)
         
-        layout = QVBoxLayout(card)
-        layout.setSpacing(8)
-        layout.setContentsMargins(20, 20, 20, 20)
+        # Apply shadow
+        shadow = QGraphicsDropShadowEffect(card)
+        shadow.setBlurRadius(20)
+        shadow.setOffset(0, 4)
+        shadow.setColor(QColor(0, 0, 0, 60))
+        card.setGraphicsEffect(shadow)
         
-        # Title
-        title_label = QLabel(title)
-        title_label.setStyleSheet(f"""
-            QLabel {{
-                font-size: 14px;
-                color: #a0aec0;
-                font-weight: 600;
+        # Use inline style to set the side border color dynamically
+        card.setStyleSheet(f"""
+            QFrame#StatCard {{
+                border-left: 4px solid {color};
             }}
         """)
-        layout.addWidget(title_label)
+        
+        layout = QVBoxLayout(card)
+        layout.setSpacing(12)
+        layout.setContentsMargins(24, 24, 24, 24)
+        
+        # Top row (Title + Icon)
+        top_row = QHBoxLayout()
+        top_row.setSpacing(10)
+        
+        title_label = QLabel(title)
+        title_label.setObjectName("CardTitle")
+        top_row.addWidget(title_label)
+        
+        top_row.addStretch()
+        
+        # Icon
+        icon_label = QLabel(icon_name)
+        icon_label.setStyleSheet(f"font-size: 24px; color: {color};")
+        top_row.addWidget(icon_label)
+        
+        layout.addLayout(top_row)
+        
+        # Spacer
+        layout.addStretch()
         
         # Value
         value_label = QLabel(value)
-        value_label.setStyleSheet(f"""
-            QLabel {{
-                font-size: 32px;
-                color: {color};
-                font-weight: 800;
-            }}
-        """)
+        value_label.setObjectName("CardValue")
+        # value_label.setStyleSheet(f"color: {color};") # Remove specific color override to use theme
         layout.addWidget(value_label)
-        
-        layout.addStretch()
         
         return card
     
@@ -217,8 +197,10 @@ class DashboardWidget(QWidget):
     
     def update_stat_card(self, card: QFrame, value: str):
         """Update stat card value"""
-        layout = card.layout()
-        if layout and layout.count() > 1:
-            value_label = layout.itemAt(1).widget()
-            if value_label and isinstance(value_label, QLabel):
-                value_label.setText(value)
+        value_label = card.findChild(QLabel, "CardValue")
+        if value_label:
+            value_label.setText(value)
+
+    def refresh_data(self):
+        """Refresh data when tab is active"""
+        self.load_statistics()

@@ -29,10 +29,7 @@ class MasterDataWidget(QWidget):
         layout.setContentsMargins(20, 20, 20, 20)
         
         title = QLabel("Master Data Management")
-        title_font = QFont()
-        title_font.setPointSize(20)
-        title_font.setBold(True)
-        title.setFont(title_font)
+        title.setObjectName("PageTitle")
         layout.addWidget(title)
         
         # Tabs
@@ -60,7 +57,13 @@ class MasterDataWidget(QWidget):
         
         layout.addWidget(tabs)
         self.setLayout(layout)
-
+    def refresh_data(self):
+        """Refresh data for all tabs"""
+        # Iterate through all tabs and refresh if they have the method
+        for i in range(self.findChild(QTabWidget).count()):
+            widget = self.findChild(QTabWidget).widget(i)
+            if hasattr(widget, 'load_data'):
+                widget.load_data()
 class MasterDataTableWidget(QWidget):
     """Generic master data table widget"""
     
@@ -79,10 +82,14 @@ class MasterDataTableWidget(QWidget):
         header_layout = QHBoxLayout()
         
         title = QLabel(f"{self.data_type} Management")
-        title_font = QFont()
-        title_font.setBold(True)
-        title_font.setPointSize(14)
-        title.setFont(title_font)
+        title.setObjectName("SectionTitle") # or Subtitle/CardTitle
+        # Actually PageTitle is 24px, SectionTitle I might need to check theme.py
+        # theme.py has PageTitle (24px bold)
+        # It doesn't seem to have SectionTitle. 
+        # I'll use CardTitle (18px bold) or just standard style.
+        # Original was 14px bold. 14px is small for a title.
+        # I'll use "CardTitle" which is usually 16-18px.
+        title.setObjectName("CardTitle")
         header_layout.addWidget(title)
         
         header_layout.addStretch()
@@ -104,6 +111,7 @@ class MasterDataTableWidget(QWidget):
         self.table.setShowGrid(False)
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.verticalHeader().setVisible(False)
+        self.table.verticalHeader().setDefaultSectionSize(60)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         
         if self.data_type == "Department":
@@ -143,7 +151,7 @@ class MasterDataTableWidget(QWidget):
                     delete_btn = QPushButton("🗑️")
                     delete_btn.setToolTip("Delete")
                     delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(30, 30)
+                    delete_btn.setFixedSize(40, 40)
                     delete_btn.clicked.connect(lambda checked, item_id=item.department_id: 
                                               self.delete_item(item_id))
                     actions_layout.addWidget(delete_btn)
@@ -386,7 +394,7 @@ class MasterDataDialog(QDialog):
                     department_id=self.id_input.text().strip(),
                     department_name=self.name_input.text().strip()
                 )
-                success = self.master_repo.add_department(dept)
+                success = self.master_repo.create_department(dept)
                 
             elif self.data_type == "Designation":
                 if not self.id_input.text().strip() or not self.name_input.text().strip() or not self.dept_combo.currentData():
@@ -398,7 +406,7 @@ class MasterDataDialog(QDialog):
                     designation_name=self.name_input.text().strip(),
                     department_id=self.dept_combo.currentData()
                 )
-                success = self.master_repo.add_designation(des)
+                success = self.master_repo.create_designation(des)
                 
             elif self.data_type == "Branch":
                 if not self.id_input.text().strip() or not self.name_input.text().strip():
@@ -411,7 +419,7 @@ class MasterDataDialog(QDialog):
                     branch_address=self.address_input.text().strip(),
                     phone_number=self.phone_input.text().strip()
                 )
-                success = self.master_repo.add_branch(branch)
+                success = self.master_repo.create_branch(branch)
                 
             elif self.data_type == "Shift":
                 if not self.id_input.text().strip() or not self.name_input.text().strip():
@@ -424,7 +432,7 @@ class MasterDataDialog(QDialog):
                     in_time=self.in_time_input.time().toString("HH:mm"),
                     out_time=self.out_time_input.time().toString("HH:mm")
                 )
-                success = self.master_repo.add_shift(shift)
+                success = self.master_repo.create_shift(shift)
                 
             elif self.data_type == "Holiday":
                 if not self.id_input.text().strip() or not self.name_input.text().strip():
@@ -436,7 +444,7 @@ class MasterDataDialog(QDialog):
                     holiday_name=self.name_input.text().strip(),
                     holiday_date=self.date_input.date().toPython()
                 )
-                success = self.master_repo.add_holiday(holiday)
+                success = self.master_repo.create_holiday(holiday)
             else:
                 success = False
             
