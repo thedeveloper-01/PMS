@@ -36,19 +36,9 @@ class EmployeeManagementWidget(QWidget):
         layout.setSpacing(20)
         layout.setContentsMargins(30, 25, 30, 25)
         
-        # Header
-        header_layout = QHBoxLayout()
-        
-        title = QLabel("Employee Directory")
-        title_font = QFont()
-        title_font.setPointSize(20)
-        title_font.setBold(True)
-        title.setFont(title_font)
-        title.setStyleSheet("color: #ffffff;")
-        header_layout.addWidget(title)
-        
-        header_layout.addStretch()
-        layout.addLayout(header_layout)
+        # Header removed (handled by Main Window)
+        # header_layout = QHBoxLayout() ...
+        # layout.addLayout(header_layout)
         
         # Search bar
         search_frame = QFrame()
@@ -109,10 +99,11 @@ class EmployeeManagementWidget(QWidget):
         
         # Table
         self.table = QTableWidget()
-        self.table.setColumnCount(9)
+        self.table.setColumnCount(13)
         self.table.setHorizontalHeaderLabels([
-            "Employee ID", "Name", "Email", "Mobile",
-            "Department", "Designation", "Role", "Basic Salary", "Actions"
+            "Employee ID", "Name", "Email", "Mobile", "Location",
+            "Department", "Designation", "Role", "Basic Salary",
+            "Bank A/C", "PAN", "UAN", "Actions"
         ])
         
         # Table styling
@@ -120,7 +111,7 @@ class EmployeeManagementWidget(QWidget):
         self.table.setShowGrid(False)
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.verticalHeader().setVisible(False)
-        self.table.verticalHeader().setDefaultSectionSize(70)  # Increase row height to 70px
+        self.table.verticalHeader().setDefaultSectionSize(70)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setSelectionMode(QTableWidget.SingleSelection)
         
@@ -141,19 +132,22 @@ class EmployeeManagementWidget(QWidget):
         """)
         
         # Set column widths
-        self.table.setColumnWidth(0, 120)  # Employee ID
-        self.table.setColumnWidth(1, 180)  # Name
-        self.table.setColumnWidth(2, 200)  # Email
-        self.table.setColumnWidth(3, 130)  # Mobile
-        self.table.setColumnWidth(4, 130)  # Department
-        self.table.setColumnWidth(5, 130)  # Designation
-        self.table.setColumnWidth(6, 100)  # Role
-        self.table.setColumnWidth(7, 120)  # Basic Salary
+        self.table.setColumnWidth(0, 140)  # Employee ID
+        self.table.setColumnWidth(1, 150)  # Name
+        self.table.setColumnWidth(2, 180)  # Email
+        self.table.setColumnWidth(3, 110)  # Mobile
+        self.table.setColumnWidth(4, 100)  # Location
+        self.table.setColumnWidth(5, 130)  # Department
+        self.table.setColumnWidth(6, 130)  # Designation
+        self.table.setColumnWidth(7, 80)   # Role
+        self.table.setColumnWidth(8, 140)  # Basic Salary
+        self.table.setColumnWidth(9, 120)  # Bank
+        self.table.setColumnWidth(10, 100) # PAN
+        self.table.setColumnWidth(11, 100) # UAN
         
         # Action column fixed width
-        # self.table.setColumnWidth(8, 220) 
-        self.table.horizontalHeader().setSectionResizeMode(8, QHeaderView.Fixed)
-        self.table.setColumnWidth(8, 120)
+        self.table.horizontalHeader().setSectionResizeMode(12, QHeaderView.Fixed)
+        self.table.setColumnWidth(12, 120)
         
         layout.addWidget(self.table, 1)
         
@@ -188,6 +182,11 @@ class EmployeeManagementWidget(QWidget):
                 mobile_item.setFlags(mobile_item.flags() & ~Qt.ItemIsEditable)
                 self.table.setItem(row, 3, mobile_item)
                 
+                # Location
+                loc_item = QTableWidgetItem(employee.location)
+                loc_item.setFlags(loc_item.flags() & ~Qt.ItemIsEditable)
+                self.table.setItem(row, 4, loc_item)
+                
                 # Get department and designation names
                 dept_name = "N/A"
                 desig_name = "N/A"
@@ -201,12 +200,12 @@ class EmployeeManagementWidget(QWidget):
                 # Department
                 dept_item = QTableWidgetItem(dept_name)
                 dept_item.setFlags(dept_item.flags() & ~Qt.ItemIsEditable)
-                self.table.setItem(row, 4, dept_item)
+                self.table.setItem(row, 5, dept_item)
                 
                 # Designation
                 desig_item = QTableWidgetItem(desig_name)
                 desig_item.setFlags(desig_item.flags() & ~Qt.ItemIsEditable)
-                self.table.setItem(row, 5, desig_item)
+                self.table.setItem(row, 6, desig_item)
                 
                 # Role
                 role_text = "Employee"
@@ -216,13 +215,28 @@ class EmployeeManagementWidget(QWidget):
                     role_text = "Admin"
                 role_item = QTableWidgetItem(role_text)
                 role_item.setFlags(role_item.flags() & ~Qt.ItemIsEditable)
-                self.table.setItem(row, 6, role_item)
+                self.table.setItem(row, 7, role_item)
                 
                 # Basic Salary
                 salary_item = QTableWidgetItem(f"₹{employee.basic_salary:,.2f}")
                 salary_item.setFlags(salary_item.flags() & ~Qt.ItemIsEditable)
                 salary_item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
-                self.table.setItem(row, 7, salary_item)
+                self.table.setItem(row, 8, salary_item)
+                
+                # Bank
+                bank_item = QTableWidgetItem(employee.bank_account_number)
+                bank_item.setFlags(bank_item.flags() & ~Qt.ItemIsEditable)
+                self.table.setItem(row, 9, bank_item)
+                
+                # PAN
+                pan_item = QTableWidgetItem(employee.pan_number)
+                pan_item.setFlags(pan_item.flags() & ~Qt.ItemIsEditable)
+                self.table.setItem(row, 10, pan_item)
+                
+                # UAN
+                uan_item = QTableWidgetItem(employee.uan_number)
+                uan_item.setFlags(uan_item.flags() & ~Qt.ItemIsEditable)
+                self.table.setItem(row, 11, uan_item)
                 
                 # Actions
                 actions_widget = QWidget()
@@ -282,7 +296,7 @@ class EmployeeManagementWidget(QWidget):
                 actions_layout.addWidget(edit_btn)
                 actions_layout.addWidget(delete_btn)
                 
-                self.table.setCellWidget(row, 8, actions_widget)
+                self.table.setCellWidget(row, 12, actions_widget)
             
             # Update status
             self.status_label.setText(f"Showing {len(employees)} employees")
@@ -305,6 +319,7 @@ class EmployeeManagementWidget(QWidget):
                 self.table.setItem(row, 1, QTableWidgetItem(employee.employee_name))
                 self.table.setItem(row, 2, QTableWidgetItem(employee.email))
                 self.table.setItem(row, 3, QTableWidgetItem(str(employee.mobile_number)))
+                self.table.setItem(row, 4, QTableWidgetItem(employee.location))
                 
                 # Get department and designation names
                 dept_name = "N/A"
@@ -316,8 +331,8 @@ class EmployeeManagementWidget(QWidget):
                     desig = self.master_repo.get_designation(employee.designation_id)
                     desig_name = desig.designation_name if desig else "N/A"
                 
-                self.table.setItem(row, 4, QTableWidgetItem(dept_name))
-                self.table.setItem(row, 5, QTableWidgetItem(desig_name))
+                self.table.setItem(row, 5, QTableWidgetItem(dept_name))
+                self.table.setItem(row, 6, QTableWidgetItem(desig_name))
                 
                 # Role
                 role_text = "Employee"
@@ -325,9 +340,12 @@ class EmployeeManagementWidget(QWidget):
                     role_text = "HR"
                 elif employee.role == ROLE_ADMIN:
                     role_text = "Admin"
-                self.table.setItem(row, 6, QTableWidgetItem(role_text))
+                self.table.setItem(row, 7, QTableWidgetItem(role_text))
                 
-                self.table.setItem(row, 7, QTableWidgetItem(f"₹{employee.basic_salary:,.2f}"))
+                self.table.setItem(row, 8, QTableWidgetItem(f"₹{employee.basic_salary:,.2f}"))
+                self.table.setItem(row, 9, QTableWidgetItem(employee.bank_account_number))
+                self.table.setItem(row, 10, QTableWidgetItem(employee.pan_number))
+                self.table.setItem(row, 11, QTableWidgetItem(employee.uan_number))
 
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
@@ -396,10 +414,23 @@ class EmployeeDialog(QDialog):
         self.mobile_input = QLineEdit()
         form.addRow("Mobile:", self.mobile_input)
 
+        self.location_input = QLineEdit()
+        form.addRow("Location:", self.location_input)
+
         self.salary_input = QDoubleSpinBox()
         self.salary_input.setMaximum(9999999)
         self.salary_input.setPrefix("₹ ")
         form.addRow("Basic Salary:", self.salary_input)
+        
+        self.bank_input = QLineEdit()
+        form.addRow("Bank Account:", self.bank_input)
+        
+        self.pan_input = QLineEdit()
+        self.pan_input.setPlaceholderText("ABCDE1234F")
+        form.addRow("PAN Number:", self.pan_input)
+        
+        self.uan_input = QLineEdit()
+        form.addRow("UAN Number:", self.uan_input)
 
         self.dept_combo = QComboBox()
         self.dept_combo.addItem("Select Department", None)
@@ -447,7 +478,11 @@ class EmployeeDialog(QDialog):
         self.name_input.setText(self.employee.employee_name)
         self.email_input.setText(self.employee.email)
         self.mobile_input.setText(str(self.employee.mobile_number))
+        self.location_input.setText(self.employee.location)
         self.salary_input.setValue(self.employee.basic_salary)
+        self.bank_input.setText(self.employee.bank_account_number)
+        self.pan_input.setText(self.employee.pan_number)
+        self.uan_input.setText(self.employee.uan_number)
 
         self.dept_combo.setCurrentIndex(
             self.dept_combo.findData(self.employee.department_id)
@@ -471,7 +506,11 @@ class EmployeeDialog(QDialog):
                 self.employee.password if self.employee else ''
             ),
             'mobile_number': self.mobile_input.text().strip(),
+            'location': self.location_input.text().strip(),
             'basic_salary': self.salary_input.value(),
+            'bank_account_number': self.bank_input.text().strip(),
+            'pan_number': self.pan_input.text().strip().upper(),
+            'uan_number': self.uan_input.text().strip(),
             'department_id': self.dept_combo.currentData(),
             'designation_id': self.designation_combo.currentData(),
             'branch_id': self.branch_combo.currentData(),

@@ -444,3 +444,23 @@ NameError: name 'background' is not defined
 2026-01-23 15:36:45,750 - payroll_system.main - INFO - Database connected successfully
 2026-01-23 15:36:45,865 - payroll_system.main - INFO - Default admin already exists
 2026-01-23 15:37:58,451 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-23 15:40:53,288 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 15:40:53,653 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 15:40:53,654 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 15:40:53,770 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 15:40:57,262 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-23 15:46:45,904 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 15:46:46,287 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 15:46:46,288 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 15:46:46,406 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 15:50:04,956 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-23 15:50:13,789 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 15:50:14,135 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 15:50:14,136 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 15:50:14,241 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 15:50:22,107 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-23 17:55:16,446 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 17:55:16,839 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 17:55:16,839 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 17:55:16,971 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 18:25:09,680 - payroll_system.utils.database - INFO - Disconnected from MongoDB

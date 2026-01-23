@@ -35,6 +35,9 @@ class Employee:
         # Financial Information
         self.basic_salary = float(kwargs.get('basic_salary', 0))
         self.bank_account_number = kwargs.get('bank_account_number', '')
+        self.pan_number = kwargs.get('pan_number', '')
+        self.uan_number = kwargs.get('uan_number', '')
+        self.location = kwargs.get('location', '') # Added location
         self.pt = float(kwargs.get('pt', 0))
         
         # Metadata
@@ -65,6 +68,9 @@ class Employee:
             'shift_id': self.shift_id,
             'basic_salary': self.basic_salary,
             'bank_account_number': self.bank_account_number,
+            'pan_number': self.pan_number,
+            'uan_number': self.uan_number,
+            'location': self.location,
             'pt': self.pt,
             'created_date': self.created_date.isoformat() if isinstance(self.created_date, date) else str(self.created_date),
             'modified_date': self.modified_date.isoformat() if isinstance(self.modified_date, date) else str(self.modified_date),
@@ -119,6 +125,9 @@ class Employee:
             shift_id=data.get('shift_id'),
             basic_salary=data.get('basic_salary', 0),
             bank_account_number=data.get('bank_account_number', ''),
+            pan_number=data.get('pan_number', ''),
+            uan_number=data.get('uan_number', ''),
+            location=data.get('location', ''),
             pt=data.get('pt', 0),
             created_date=data.get('created_date', datetime.now().date()),
             modified_date=data.get('modified_date', datetime.now().date()),

@@ -488,43 +488,11 @@ class MainWindow(QMainWindow):
 
         lay.addStretch()
 
-        # Search bar
-        search_frame = QFrame()
-        search_frame.setStyleSheet("""
-            QFrame {
-                background: #0f172a;
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                border-radius: 8px;
-            }
-        """)
-        search_frame.setFixedHeight(44)
+        # Search bar removed (using local widget search)
+        # search_frame = QFrame() ...
+        # lay.addWidget(search_frame)
         
-        search_layout = QHBoxLayout(search_frame)
-        search_layout.setContentsMargins(12, 0, 12, 0)
-        search_layout.setSpacing(10)
-        
-        search_icon = QLabel("🔍")
-        search_icon.setStyleSheet("color: #64748b; font-size: 14px; background: transparent; border: none;")
-        
-        self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("Search...")
-        self.search_input.setStyleSheet("""
-            QLineEdit {
-                background: transparent;
-                border: none;
-                color: #f8fafc;
-                font-size: 14px;
-                padding: 0;
-            }
-            QLineEdit::placeholder {
-                color: #64748b;
-            }
-        """)
-        self.search_input.setFixedWidth(240)
-        
-        search_layout.addWidget(search_icon)
-        search_layout.addWidget(self.search_input)
-        lay.addWidget(search_frame)
+        lay.addStretch()
 
         # User info
         user_frame = QFrame()
