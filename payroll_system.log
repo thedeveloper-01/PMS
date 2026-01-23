@@ -464,3 +464,7 @@ NameError: name 'background' is not defined
 2026-01-23 17:55:16,839 - payroll_system.main - INFO - Database connected successfully
 2026-01-23 17:55:16,971 - payroll_system.main - INFO - Default admin already exists
 2026-01-23 18:25:09,680 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-23 20:08:50,938 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 20:08:51,380 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 20:08:51,381 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 20:08:51,594 - payroll_system.main - INFO - Default admin already exists
