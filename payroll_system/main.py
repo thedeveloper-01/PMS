@@ -19,7 +19,8 @@ from payroll_system.gui.login_window import LoginWindow
 from payroll_system.gui.main_window import MainWindow
 from payroll_system.gui.theme import app_stylesheet
 from payroll_system.utils.database import db
-from payroll_system.config import APP_NAME
+from payroll_system.config import APP_NAME, get_resource_path
+from PySide6.QtGui import QIcon
 
 # Configure logging
 logging.basicConfig(
@@ -90,6 +91,7 @@ def main():
         # Create Qt application
         app = QApplication(sys.argv)
         app.setApplicationName(APP_NAME)
+        app.setWindowIcon(QIcon(get_resource_path("resources/app_icon.png")))
         app.setStyle('Fusion')  # Use Fusion style for better cross-platform appearance
         app.setStyleSheet(app_stylesheet())
         

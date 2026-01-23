@@ -16,9 +16,9 @@ from PySide6.QtWidgets import (
     QSizePolicy,
 )
 from PySide6.QtCore import Qt, QSize
-from PySide6.QtGui import QFont, QIcon
+from PySide6.QtGui import QFont, QIcon, QPixmap, QPainter, QPainterPath
 from payroll_system.models.employee import Employee
-from payroll_system.config import ROLE_ADMIN, ROLE_HR, ROLE_EMPLOYEE, ROLE_NAMES
+from payroll_system.config import ROLE_ADMIN, ROLE_HR, ROLE_EMPLOYEE, ROLE_NAMES, get_resource_path
 from payroll_system.gui.dashboard import DashboardWidget
 from payroll_system.gui.employee_management import EmployeeManagementWidget
 from payroll_system.gui.attendance_management import AttendanceManagementWidget
@@ -267,7 +267,7 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(main_layout)
     
     def create_sidebar(self):
-        """Create sidebar navigation"""
+        """Create premium sidebar navigation"""
         sidebar = QFrame()
         sidebar.setStyleSheet("""
             QFrame {
@@ -275,62 +275,85 @@ class MainWindow(QMainWindow):
                 border-right: 1px solid rgba(255, 255, 255, 0.08);
             }
         """)
-        sidebar.setFixedWidth(300)
+        sidebar.setFixedWidth(280)
         
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         
-        # Brand section
+        # --- Brand Section ---
         brand_frame = QFrame()
         brand_frame.setStyleSheet("""
             QFrame {
                 background: transparent;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-                padding: 20px 12px;
             }
         """)
         brand_layout = QHBoxLayout(brand_frame)
-        brand_layout.setContentsMargins(0, 0, 0, 0)
-        brand_layout.setSpacing(12)
+        brand_layout.setContentsMargins(24, 32, 24, 32)
+        brand_layout.setSpacing(16)
         
-        # Logo/Icon
-        logo_label = QLabel("💰")
+        # Helper to round corners
+        def round_corners(source: QPixmap, radius: int) -> QPixmap:
+            target = QPixmap(source.size())
+            target.fill(Qt.transparent)
+            painter = QPainter(target)
+            painter.setRenderHint(QPainter.Antialiasing)
+            painter.setRenderHint(QPainter.SmoothPixmapTransform)
+            path = QPainterPath()
+            path.addRoundedRect(0, 0, source.width(), source.height(), radius, radius)
+            painter.setClipPath(path)
+            painter.drawPixmap(0, 0, source)
+            painter.end()
+            return target
+
+        # Logo Image
+        logo_label = QLabel()
+        logo_pixmap = QPixmap(get_resource_path("resources/app_icon.png"))
+        scaled_pixmap = logo_pixmap.scaled(48, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        
+        # Apply rounding (12px radius for 48px sizes)
+        rounded_pixmap = round_corners(scaled_pixmap, 12)
+        
+        logo_label.setPixmap(rounded_pixmap)
+        logo_label.setFixedSize(48, 48)
+        # Add a subtle border to the label itself to frame the rounded image
         logo_label.setStyleSheet("""
-            QLabel {
-                font-size: 24px;
-                background: rgba(59, 130, 246, 0.2);
-                border-radius: 12px;
-                padding: 6px;
-                qproperty-alignment: AlignCenter;
-            }
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: transparent;
         """)
-        logo_label.setFixedSize(50, 50)
         
-        # App name and role
+        # Text Column
         text_frame = QFrame()
         text_frame.setStyleSheet("background: transparent; border: none;")
         text_layout = QVBoxLayout(text_frame)
         text_layout.setContentsMargins(0, 0, 0, 0)
-        text_layout.setSpacing(4)
+        text_layout.setSpacing(2)
+        text_layout.setAlignment(Qt.AlignVCenter)
         
         app_label = QLabel("PayMaster")
         app_label.setStyleSheet("""
             QLabel {
-                font-size: 18px;
-                font-weight: 800;
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 20px;
+                font-weight: 700;
                 color: #f8fafc;
                 background: transparent;
+                letter-spacing: 0.5px;
             }
         """)
         
-        role_label = QLabel(ROLE_NAMES.get(self.current_employee.role, "Employee"))
+        role_text = ROLE_NAMES.get(self.current_employee.role, "Employee").upper()
+        role_label = QLabel(role_text)
         role_label.setStyleSheet("""
             QLabel {
-                font-size: 13px;
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 11px;
+                font-weight: 600;
                 color: #94a3b8;
-                font-weight: 500;
                 background: transparent;
+                letter-spacing: 1px;
             }
         """)
         
@@ -343,76 +366,91 @@ class MainWindow(QMainWindow):
         
         layout.addWidget(brand_frame)
         
-        # Navigation section
+        # --- Navigation Section ---
         nav_frame = QFrame()
-        nav_frame.setStyleSheet("""
-            QFrame {
-                background: transparent;
-                border: none;
-                padding: 20px 16px;
-            }
-        """)
+        nav_frame.setStyleSheet("background: transparent; border: none;")
         nav_layout = QVBoxLayout(nav_frame)
-        nav_layout.setContentsMargins(0, 0, 0, 0)
-        nav_layout.setSpacing(6)
+        nav_layout.setContentsMargins(16, 24, 16, 24)
+        nav_layout.setSpacing(8)
         
-        # Navigation buttons based on role
+        # Define items based on role
         if self.current_employee.role in [ROLE_ADMIN, ROLE_HR]:
             nav_items = [
-                ("📊 Dashboard", 0),
-                ("👥 Employees", 1),
-                ("✓ Attendance", 2),
-                ("💰 Payroll", 3),
-                ("📈 Reports", 4),
-                ("⚙️ Master Data", 5),
+                ("📊", "Dashboard", 0),
+                ("👥", "Employees", 1),
+                ("📅", "Attendance", 2),
+                ("💰", "Payroll", 3),
+                ("📈", "Reports", 4),
+                ("⚙️", "Master Data", 5),
             ]
         else:
-            # Employee can only see limited options
             nav_items = [
-                ("📊 Dashboard", 0),
-                ("✓ Attendance", 2),
-                ("💰 Payroll", 3),
+                ("📊", "Dashboard", 0),
+                ("📅", "Attendance", 2),
+                ("💰", "Payroll", 3),
             ]
-        
-        for icon_text, index in nav_items:
-            btn = NavButton(icon_text)
-            btn.setFixedHeight(48)
+            
+        for icon, text, index in nav_items:
+            # Custom styled button
+            btn = NavButton(text, icon)
+            btn.setFixedHeight(50)
+            btn.setStyleSheet("""
+                QPushButton {
+                    text-align: left;
+                    padding-left: 20px;
+                    color: #cbd5e1;
+                    font-size: 14px;
+                    font-weight: 500;
+                    border: none;
+                    border-radius: 8px;
+                    background: transparent;
+                }
+                QPushButton:hover {
+                    color: #ffffff;
+                    background: rgba(255, 255, 255, 0.05);
+                }
+                QPushButton[active="true"] {
+                    color: #ffffff;
+                    background: #3b82f6;
+                    font-weight: 600;
+                }
+            """)
             btn.clicked.connect(lambda checked=False, idx=index: self.navigate_to(idx))
             nav_layout.addWidget(btn)
             self._nav_buttons[index] = btn
-        
+            
         nav_layout.addStretch()
         layout.addWidget(nav_frame, 1)
         
-        # Logout section
+        # --- Logout Section ---
         logout_frame = QFrame()
         logout_frame.setStyleSheet("""
             QFrame {
-                background: transparent;
+                background: rgba(15, 23, 42, 0.5); /* Darker bottom area */
                 border-top: 1px solid rgba(255, 255, 255, 0.08);
-                border-right: none;
-                padding: 20px;
             }
         """)
         logout_layout = QHBoxLayout(logout_frame)
-        logout_layout.setContentsMargins(0, 0, 0, 0)
+        logout_layout.setContentsMargins(24, 24, 24, 24)
         
-        logout_btn = QPushButton("🚪 Sign Out")
-        logout_btn.setObjectName("NavButton") # Re-use generic nav styling for hover
+        logout_btn = QPushButton("🚪  Sign Out")
+        logout_btn.setCursor(Qt.PointingHandCursor)
         logout_btn.setStyleSheet("""
             QPushButton {
-                text-align: left;
-                color: #94a3b8;
-                padding: 10px 16px;
-                border: 1px solid rgba(255,255,255,0.05);
+                text-align: center;
+                color: #ef4444; /* Red color */
+                font-weight: 600;
+                font-size: 14px;
+                padding: 12px;
+                border: 1px solid rgba(239, 68, 68, 0.3);
+                border-radius: 8px;
+                background: rgba(239, 68, 68, 0.05);
             }
             QPushButton:hover {
-                color: #ef4444;
-                background: rgba(239, 68, 68, 0.1);
-                border: 1px solid rgba(239, 68, 68, 0.2);
+                background: rgba(239, 68, 68, 0.15);
+                border: 1px solid rgba(239, 68, 68, 0.5);
             }
         """)
-        logout_btn.setCursor(Qt.PointingHandCursor)
         logout_btn.clicked.connect(self.logout)
         logout_layout.addWidget(logout_btn)
         

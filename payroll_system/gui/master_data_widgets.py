@@ -1,15 +1,14 @@
-
 """
 Master data management widgets
 """
+from functools import partial
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                              QPushButton, QTabWidget, QTableWidget,
-                              QTableWidgetItem, QMessageBox, QDialog,
-                              QFormLayout, QLineEdit, QDateEdit, QTimeEdit,
-                              QDialogButtonBox, QHBoxLayout, QVBoxLayout,
-                              QComboBox, QHeaderView)
-from PySide6.QtCore import Qt, QDate
-from PySide6.QtGui import QFont
+                               QPushButton, QTabWidget, QTableWidget,
+                               QTableWidgetItem, QMessageBox, QDialog,
+                               QFormLayout, QLineEdit, QDateEdit, QTimeEdit,
+                               QDialogButtonBox, QComboBox, QHeaderView, QFrame)
+from PySide6.QtCore import Qt, QDate, QTime
+from PySide6.QtGui import QFont, QIcon
 from payroll_system.repository.master_data_repository import MasterDataRepository
 from payroll_system.models.master_data import Department, Designation, Branch, Shift, Holiday
 from datetime import datetime, time
@@ -25,45 +24,45 @@ class MasterDataWidget(QWidget):
     def init_ui(self):
         """Initialize UI"""
         layout = QVBoxLayout()
-        layout.setSpacing(15)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(20)
+        layout.setContentsMargins(30, 30, 30, 30)
         
+        # Header
+        header_layout = QHBoxLayout()
         title = QLabel("Master Data Management")
         title.setObjectName("PageTitle")
-        layout.addWidget(title)
+        header_layout.addWidget(title)
+        header_layout.addStretch()
+        layout.addLayout(header_layout)
         
         # Tabs
-        tabs = QTabWidget()
+        self.tabs = QTabWidget()
         
-        # Department tab
-        dept_widget = MasterDataTableWidget("Department", self.master_repo)
-        tabs.addTab(dept_widget, "Departments")
+        # Configuration for each tab
+        # This setup ensures consistent behavior and easy extension
+        self.tab_widgets = {}
         
-        # Designation tab
-        des_widget = MasterDataTableWidget("Designation", self.master_repo)
-        tabs.addTab(des_widget, "Designations")
+        tab_configs = [
+            ("Department", "Departments"),
+            ("Designation", "Designations"),
+            ("Branch", "Branches"),
+            ("Shift", "Shifts"),
+            ("Holiday", "Holidays")
+        ]
         
-        # Branch tab
-        branch_widget = MasterDataTableWidget("Branch", self.master_repo)
-        tabs.addTab(branch_widget, "Branches")
-        
-        # Shift tab
-        shift_widget = MasterDataTableWidget("Shift", self.master_repo)
-        tabs.addTab(shift_widget, "Shifts")
-        
-        # Holiday tab
-        holiday_widget = MasterDataTableWidget("Holiday", self.master_repo)
-        tabs.addTab(holiday_widget, "Holidays")
-        
-        layout.addWidget(tabs)
+        for data_type, title in tab_configs:
+            widget = MasterDataTableWidget(data_type, self.master_repo)
+            self.tabs.addTab(widget, title)
+            self.tab_widgets[data_type] = widget
+            
+        layout.addWidget(self.tabs)
         self.setLayout(layout)
+
     def refresh_data(self):
         """Refresh data for all tabs"""
-        # Iterate through all tabs and refresh if they have the method
-        for i in range(self.findChild(QTabWidget).count()):
-            widget = self.findChild(QTabWidget).widget(i)
-            if hasattr(widget, 'load_data'):
-                widget.load_data()
+        for widget in self.tab_widgets.values():
+            widget.load_data()
+
 class MasterDataTableWidget(QWidget):
     """Generic master data table widget"""
     
@@ -77,184 +76,171 @@ class MasterDataTableWidget(QWidget):
     def init_ui(self):
         """Initialize UI"""
         layout = QVBoxLayout()
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 10, 0, 0)
         
-        # Header
-        header_layout = QHBoxLayout()
+        # --- Card Container ---
+        card = QFrame()
+        card.setObjectName("Card")
+        card_layout = QVBoxLayout(card)
+        card_layout.setSpacing(15)
+        card_layout.setContentsMargins(15, 15, 15, 15)
         
-        title = QLabel(f"{self.data_type} Management")
-        title.setObjectName("SectionTitle") # or Subtitle/CardTitle
-        # Actually PageTitle is 24px, SectionTitle I might need to check theme.py
-        # theme.py has PageTitle (24px bold)
-        # It doesn't seem to have SectionTitle. 
-        # I'll use CardTitle (18px bold) or just standard style.
-        # Original was 14px bold. 14px is small for a title.
-        # I'll use "CardTitle" which is usually 16-18px.
-        title.setObjectName("CardTitle")
-        header_layout.addWidget(title)
+        # --- Toolbar ---
+        toolbar = QHBoxLayout()
         
-        header_layout.addStretch()
+        title = QLabel(f"{self.data_type} List")
+        title.setObjectName("SectionTitle")
+        toolbar.addWidget(title)
         
-        add_btn = QPushButton(f"➕ Add {self.data_type}")
-        add_btn.setObjectName("PrimaryButton")
-        add_btn.clicked.connect(self.add_item)
-        header_layout.addWidget(add_btn)
+        toolbar.addStretch()
         
-        refresh_btn = QPushButton("🔄 Refresh")
+        refresh_btn = QPushButton("Refresh")
+        refresh_btn.setCursor(Qt.PointingHandCursor)
         refresh_btn.clicked.connect(self.load_data)
-        header_layout.addWidget(refresh_btn)
+        toolbar.addWidget(refresh_btn)
         
-        layout.addLayout(header_layout)
+        add_btn = QPushButton(f"+ Add {self.data_type}")
+        add_btn.setObjectName("PrimaryButton")
+        add_btn.setCursor(Qt.PointingHandCursor)
+        add_btn.clicked.connect(self.add_item)
+        toolbar.addWidget(add_btn)
         
-        # Table
+        card_layout.addLayout(toolbar)
+        
+        # --- Table ---
         self.table = QTableWidget()
         self.table.setAlternatingRowColors(True)
-        self.table.setShowGrid(False)
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table.verticalHeader().setVisible(False)
-        self.table.verticalHeader().setDefaultSectionSize(70)
+        self.table.setShowGrid(True)
+        self.table.setFrameShape(QFrame.NoFrame)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.table.verticalHeader().setVisible(False)
+        self.table.verticalHeader().setDefaultSectionSize(50) # Comfortable height
         
-        if self.data_type == "Department":
-            self.table.setColumnCount(3)
-            self.table.setHorizontalHeaderLabels(["ID", "Name", "Actions"])
-        elif self.data_type == "Designation":
-            self.table.setColumnCount(4)
-            self.table.setHorizontalHeaderLabels(["ID", "Name", "Department", "Actions"])
-        elif self.data_type == "Branch":
-            self.table.setColumnCount(5)
-            self.table.setHorizontalHeaderLabels(["ID", "Name", "Address", "Phone", "Actions"])
-        elif self.data_type == "Shift":
-            self.table.setColumnCount(5)
-            self.table.setHorizontalHeaderLabels(["ID", "Name", "In Time", "Out Time", "Actions"])
-        elif self.data_type == "Holiday":
-            self.table.setColumnCount(4)
-            self.table.setHorizontalHeaderLabels(["ID", "Name", "Date", "Actions"])
+        # Column Configuration
+        self.columns = self._get_columns()
+        self.table.setColumnCount(len(self.columns) + 1) # +1 for Actions
+        self.table.setHorizontalHeaderLabels(self.columns + ["Action"]) # Singular "Action" fits better
         
-        layout.addWidget(self.table)
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        # Fix Action column width
+        header.setSectionResizeMode(len(self.columns), QHeaderView.Fixed)
+        self.table.setColumnWidth(len(self.columns), 80) # Widen slightly for header
+        
+        card_layout.addWidget(self.table)
+        
+        layout.addWidget(card)
         self.setLayout(layout)
-    
+        
+    def _get_columns(self):
+        """Get column names based on data type"""
+        if self.data_type == "Department":
+            return ["ID", "Name"]
+        elif self.data_type == "Designation":
+            return ["ID", "Name", "Department"]
+        elif self.data_type == "Branch":
+            return ["ID", "Name", "Address", "Phone"]
+        elif self.data_type == "Shift":
+            return ["ID", "Name", "In Time", "Out Time"]
+        elif self.data_type == "Holiday":
+            return ["ID", "Name", "Date"]
+        return []
+
     def load_data(self):
         """Load data into table"""
         try:
+            items = []
             if self.data_type == "Department":
                 items = self.master_repo.get_all_departments()
-                self.table.setRowCount(len(items))
-                for row, item in enumerate(items):
-                    self.table.setItem(row, 0, QTableWidgetItem(item.department_id))
-                    self.table.setItem(row, 1, QTableWidgetItem(item.department_name))
-                    
-                    # Action buttons
-                    actions_widget = QWidget()
-                    actions_layout = QHBoxLayout(actions_widget)
-                    actions_layout.setContentsMargins(0, 0, 0, 0)
-                    
-                    delete_btn = QPushButton("🗑️")
-                    delete_btn.setToolTip("Delete")
-                    delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(40, 40)
-                    delete_btn.clicked.connect(lambda checked, item_id=item.department_id: 
-                                              self.delete_item(item_id))
-                    actions_layout.addWidget(delete_btn)
-                    
-                    self.table.setCellWidget(row, 2, actions_widget)
-                    
             elif self.data_type == "Designation":
                 items = self.master_repo.get_all_designations()
-                self.table.setRowCount(len(items))
-                for row, item in enumerate(items):
-                    self.table.setItem(row, 0, QTableWidgetItem(item.designation_id))
-                    self.table.setItem(row, 1, QTableWidgetItem(item.designation_name))
-                    self.table.setItem(row, 2, QTableWidgetItem(item.department_name))
-                    
-                    # Action buttons
-                    actions_widget = QWidget()
-                    actions_layout = QHBoxLayout(actions_widget)
-                    actions_layout.setContentsMargins(0, 0, 0, 0)
-                    
-                    delete_btn = QPushButton("🗑️")
-                    delete_btn.setToolTip("Delete")
-                    delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(40, 40)
-                    delete_btn.clicked.connect(lambda checked, item_id=item.designation_id: 
-                                              self.delete_item(item_id))
-                    actions_layout.addWidget(delete_btn)
-                    
-                    self.table.setCellWidget(row, 3, actions_widget)
-                    
             elif self.data_type == "Branch":
                 items = self.master_repo.get_all_branches()
-                self.table.setRowCount(len(items))
-                for row, item in enumerate(items):
-                    self.table.setItem(row, 0, QTableWidgetItem(item.branch_id))
-                    self.table.setItem(row, 1, QTableWidgetItem(item.name))
-                    self.table.setItem(row, 2, QTableWidgetItem(item.branch_address))
-                    self.table.setItem(row, 3, QTableWidgetItem(item.phone_number))
-                    
-                    # Action buttons
-                    actions_widget = QWidget()
-                    actions_layout = QHBoxLayout(actions_widget)
-                    actions_layout.setContentsMargins(0, 0, 0, 0)
-                    
-                    delete_btn = QPushButton("🗑️")
-                    delete_btn.setToolTip("Delete")
-                    delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(40, 40)
-                    delete_btn.clicked.connect(lambda checked, item_id=item.branch_id: 
-                                              self.delete_item(item_id))
-                    actions_layout.addWidget(delete_btn)
-                    
-                    self.table.setCellWidget(row, 4, actions_widget)
-                    
             elif self.data_type == "Shift":
                 items = self.master_repo.get_all_shifts()
-                self.table.setRowCount(len(items))
-                for row, item in enumerate(items):
-                    self.table.setItem(row, 0, QTableWidgetItem(item.shift_id))
-                    self.table.setItem(row, 1, QTableWidgetItem(item.shift_name))
-                    self.table.setItem(row, 2, QTableWidgetItem(item.in_time))
-                    self.table.setItem(row, 3, QTableWidgetItem(item.out_time))
-                    
-                    # Action buttons
-                    actions_widget = QWidget()
-                    actions_layout = QHBoxLayout(actions_widget)
-                    actions_layout.setContentsMargins(0, 0, 0, 0)
-                    
-                    delete_btn = QPushButton("🗑️")
-                    delete_btn.setToolTip("Delete")
-                    delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(40, 40)
-                    delete_btn.clicked.connect(lambda checked, item_id=item.shift_id: 
-                                              self.delete_item(item_id))
-                    actions_layout.addWidget(delete_btn)
-                    
-                    self.table.setCellWidget(row, 4, actions_widget)
-                    
             elif self.data_type == "Holiday":
                 items = self.master_repo.get_all_holidays()
-                self.table.setRowCount(len(items))
-                for row, item in enumerate(items):
-                    self.table.setItem(row, 0, QTableWidgetItem(item.holiday_id))
-                    self.table.setItem(row, 1, QTableWidgetItem(item.holiday_name))
-                    date_str = item.holiday_date.isoformat() if hasattr(item.holiday_date, 'isoformat') else str(item.holiday_date)
-                    self.table.setItem(row, 2, QTableWidgetItem(date_str))
-                    
-                    # Action buttons
-                    actions_widget = QWidget()
-                    actions_layout = QHBoxLayout(actions_widget)
-                    actions_layout.setContentsMargins(0, 0, 0, 0)
-                    
-                    delete_btn = QPushButton("🗑️")
-                    delete_btn.setToolTip("Delete")
-                    delete_btn.setObjectName("DangerButton")
-                    delete_btn.setFixedSize(40, 40)
-                    delete_btn.clicked.connect(lambda checked, item_id=item.holiday_id: 
-                                              self.delete_item(item_id))
-                    actions_layout.addWidget(delete_btn)
-                    
-                    self.table.setCellWidget(row, 3, actions_widget)
+                
+            self.table.setRowCount(len(items))
+            self.table.setSortingEnabled(False) 
             
-            # self.table.resizeColumnsToContents()
+            for row, item in enumerate(items):
+                # Helpers to safely get attributes
+                def get_val(obj, attr, default=""):
+                    return str(getattr(obj, attr, default))
+                
+                # Fetch Data
+                id_val = ""
+                data = []
+                
+                if self.data_type == "Department":
+                    id_val = item.department_id
+                    data = [item.department_id, item.department_name]
                     
+                elif self.data_type == "Designation":
+                    id_val = item.designation_id
+                    data = [item.designation_id, item.designation_name, getattr(item, 'department_name', 'N/A')]
+                    
+                elif self.data_type == "Branch":
+                    id_val = item.branch_id
+                    data = [item.branch_id, item.name, item.branch_address, item.phone_number]
+                    
+                elif self.data_type == "Shift":
+                    id_val = item.shift_id
+                    data = [item.shift_id, item.shift_name, item.in_time, item.out_time]
+                    
+                elif self.data_type == "Holiday":
+                    id_val = item.holiday_id
+                    date_val = item.holiday_date.isoformat() if hasattr(item.holiday_date, 'isoformat') else str(item.holiday_date)
+                    data = [item.holiday_id, item.holiday_name, date_val]
+                
+                # Populate columns
+                for col, text in enumerate(data):
+                    item_widget = QTableWidgetItem(str(text))
+                    item_widget.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+                    self.table.setItem(row, col, item_widget)
+                
+                # Action Buttons
+                actions_widget = QWidget()
+                actions_layout = QHBoxLayout(actions_widget)
+                actions_layout.setContentsMargins(0, 0, 0, 0)
+                actions_layout.setAlignment(Qt.AlignCenter)
+                
+                # Delete Button (Text, Compact, Refined)
+                delete_btn = QPushButton("Del")
+                delete_btn.setToolTip(f"Delete {self.data_type}")
+                # We won't use DangerButton object name to avoid the big padding from theme
+                # We'll set a custom style sheet for this specific sub-component
+                delete_btn.setCursor(Qt.PointingHandCursor)
+                delete_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: rgba(239, 68, 68, 0.2); 
+                        color: #ef4444;
+                        border: 1px solid rgba(239, 68, 68, 0.5);
+                        border-radius: 4px;
+                        padding: 0px;
+                        font-weight: 600;
+                        font-size: 11px;
+                        min-height: 24px;
+                        max-width: 40px;
+                        width: 40px;
+                    }
+                    QPushButton:hover {
+                        background-color: rgba(239, 68, 68, 0.8);
+                        color: white;
+                    }
+                """)
+                # Use partial to capture specific item_id
+                delete_btn.clicked.connect(partial(self.delete_item, id_val))
+                
+                actions_layout.addWidget(delete_btn)
+                
+                self.table.setCellWidget(row, len(self.columns), actions_widget)
+            
+            self.table.setSortingEnabled(True)
+
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading data: {str(e)}")
     
@@ -264,16 +250,17 @@ class MasterDataTableWidget(QWidget):
         if dialog.exec() == QDialog.Accepted:
             self.load_data()
     
-    def delete_item(self, item_id: str):
+    def delete_item(self, item_id):
         """Delete item"""
         reply = QMessageBox.question(
             self, "Confirm Delete",
-            f"Are you sure you want to delete this {self.data_type.lower()}?",
+            f"Are you sure you want to delete this {self.data_type.lower()}?\nID: {item_id}",
             QMessageBox.Yes | QMessageBox.No
         )
         
         if reply == QMessageBox.Yes:
             try:
+                success = False
                 if self.data_type == "Department":
                     success = self.master_repo.delete_department(item_id)
                 elif self.data_type == "Designation":
@@ -284,14 +271,12 @@ class MasterDataTableWidget(QWidget):
                     success = self.master_repo.delete_shift(item_id)
                 elif self.data_type == "Holiday":
                     success = self.master_repo.delete_holiday(item_id)
-                else:
-                    success = False
                 
                 if success:
                     QMessageBox.information(self, "Success", f"{self.data_type} deleted successfully")
                     self.load_data()
                 else:
-                    QMessageBox.warning(self, "Error", f"Failed to delete {self.data_type.lower()}")
+                    QMessageBox.warning(self, "Error", f"Failed to delete {self.data_type.lower()}. It may countain dependencies.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Error deleting item: {str(e)}")
 
@@ -307,152 +292,153 @@ class MasterDataDialog(QDialog):
     def init_ui(self):
         """Initialize dialog UI"""
         self.setWindowTitle(f"Add {self.data_type}")
-        self.setMinimumWidth(400)
+        self.setMinimumWidth(450)
         
         layout = QVBoxLayout(self)
+        layout.setSpacing(15)
+        
+        # Title
+        title = QLabel(f"New {self.data_type}")
+        title.setObjectName("SectionTitle")
+        layout.addWidget(title)
+        
+        # Form
         form_layout = QFormLayout()
-        form_layout.setSpacing(10)
+        form_layout.setSpacing(15)
+        form_layout.setLabelAlignment(Qt.AlignLeft)
+        
+        # Field definitions
+        self.fields = {}
         
         if self.data_type == "Department":
-            self.id_input = QLineEdit()
-            self.name_input = QLineEdit()
-            
-            form_layout.addRow("Department ID:", self.id_input)
-            form_layout.addRow("Department Name:", self.name_input)
+            self.add_field(form_layout, "id", "Department ID")
+            self.add_field(form_layout, "name", "Department Name")
             
         elif self.data_type == "Designation":
-            self.id_input = QLineEdit()
-            self.name_input = QLineEdit()
+            self.add_field(form_layout, "id", "Designation ID")
+            self.add_field(form_layout, "name", "Designation Name")
+            
             self.dept_combo = QComboBox()
-            
-            # Load departments
-            departments = self.master_repo.get_all_departments()
-            self.dept_combo.addItem("Select Department", None)
-            for dept in departments:
-                self.dept_combo.addItem(dept.department_name, dept.department_id)
-            
-            form_layout.addRow("Designation ID:", self.id_input)
-            form_layout.addRow("Designation Name:", self.name_input)
+            depts = self.master_repo.get_all_departments()
+            for d in depts:
+                self.dept_combo.addItem(d.department_name, d.department_id)
             form_layout.addRow("Department:", self.dept_combo)
             
         elif self.data_type == "Branch":
-            self.id_input = QLineEdit()
-            self.name_input = QLineEdit()
-            self.address_input = QLineEdit()
-            self.phone_input = QLineEdit()
-            
-            form_layout.addRow("Branch ID:", self.id_input)
-            form_layout.addRow("Branch Name:", self.name_input)
-            form_layout.addRow("Address:", self.address_input)
-            form_layout.addRow("Phone:", self.phone_input)
+            self.add_field(form_layout, "id", "Branch ID")
+            self.add_field(form_layout, "name", "Branch Name")
+            self.add_field(form_layout, "address", "Address")
+            self.add_field(form_layout, "phone", "Phone Number")
             
         elif self.data_type == "Shift":
-            self.id_input = QLineEdit()
-            self.name_input = QLineEdit()
-            self.in_time_input = QTimeEdit()
-            self.out_time_input = QTimeEdit()
+            self.add_field(form_layout, "id", "Shift ID")
+            self.add_field(form_layout, "name", "Shift Name")
             
-            self.in_time_input.setDisplayFormat("HH:mm")
-            self.out_time_input.setDisplayFormat("HH:mm")
-            self.in_time_input.setTime(time(9, 0))  # Default 9:00 AM
-            self.out_time_input.setTime(time(18, 0))  # Default 6:00 PM
+            self.in_time = QTimeEdit()
+            self.in_time.setDisplayFormat("HH:mm")
+            self.in_time.setTime(time(9,0))
+            form_layout.addRow("In Time:", self.in_time)
             
-            form_layout.addRow("Shift ID:", self.id_input)
-            form_layout.addRow("Shift Name:", self.name_input)
-            form_layout.addRow("In Time:", self.in_time_input)
-            form_layout.addRow("Out Time:", self.out_time_input)
+            self.out_time = QTimeEdit()
+            self.out_time.setDisplayFormat("HH:mm")
+            self.out_time.setTime(time(18,0))
+            form_layout.addRow("Out Time:", self.out_time)
             
         elif self.data_type == "Holiday":
-            self.id_input = QLineEdit()
-            self.name_input = QLineEdit()
-            self.date_input = QDateEdit()
+            self.add_field(form_layout, "id", "Holiday ID")
+            self.add_field(form_layout, "name", "Holiday Name")
             
-            self.date_input.setDate(QDate.currentDate())
-            self.date_input.setCalendarPopup(True)
+            self.date_edit = QDateEdit()
+            self.date_edit.setCalendarPopup(True)
+            self.date_edit.setDate(QDate.currentDate())
+            form_layout.addRow("Date:", self.date_edit)
             
-            form_layout.addRow("Holiday ID:", self.id_input)
-            form_layout.addRow("Holiday Name:", self.name_input)
-            form_layout.addRow("Date:", self.date_input)
-        
         layout.addLayout(form_layout)
+        layout.addSpacing(10)
         
         # Buttons
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttons.accepted.connect(self.save_item)
-        buttons.rejected.connect(self.reject)
-        layout.addWidget(buttons)
-    
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+        
+        cancel_btn = QPushButton("Cancel")
+        cancel_btn.clicked.connect(self.reject)
+        btn_layout.addWidget(cancel_btn)
+        
+        save_btn = QPushButton("Save")
+        save_btn.setObjectName("PrimaryButton")
+        save_btn.clicked.connect(self.save_item)
+        btn_layout.addWidget(save_btn)
+        
+        layout.addLayout(btn_layout)
+        
+    def add_field(self, layout, key, label):
+        """Helper to add text field"""
+        field = QLineEdit()
+        layout.addRow(label + ":", field)
+        self.fields[key] = field
+        
     def save_item(self):
         """Save the new item"""
         try:
-            if self.data_type == "Department":
-                if not self.id_input.text().strip() or not self.name_input.text().strip():
-                    QMessageBox.warning(self, "Warning", "Please fill in all fields")
+            # Common validation
+            for key, field in self.fields.items():
+                if not field.text().strip():
+                    QMessageBox.warning(self, "Validation Error", f"{key.title()} is required.")
+                    field.setFocus()
                     return
-                    
-                dept = Department(
-                    department_id=self.id_input.text().strip(),
-                    department_name=self.name_input.text().strip()
+
+            success = False
+            
+            if self.data_type == "Department":
+                obj = Department(
+                    department_id=self.fields['id'].text().strip(),
+                    department_name=self.fields['name'].text().strip()
                 )
-                success = self.master_repo.create_department(dept)
+                success = self.master_repo.create_department(obj)
                 
             elif self.data_type == "Designation":
-                if not self.id_input.text().strip() or not self.name_input.text().strip() or not self.dept_combo.currentData():
-                    QMessageBox.warning(self, "Warning", "Please fill in all fields")
-                    return
-                    
-                des = Designation(
-                    designation_id=self.id_input.text().strip(),
-                    designation_name=self.name_input.text().strip(),
-                    department_id=self.dept_combo.currentData()
+                dept_id = self.dept_combo.currentData()
+                if not dept_id:
+                     QMessageBox.warning(self, "Validation Error", "Please select a department.")
+                     return
+                obj = Designation(
+                    designation_id=self.fields['id'].text().strip(),
+                    designation_name=self.fields['name'].text().strip(),
+                    department_id=dept_id
                 )
-                success = self.master_repo.create_designation(des)
+                success = self.master_repo.create_designation(obj)
                 
             elif self.data_type == "Branch":
-                if not self.id_input.text().strip() or not self.name_input.text().strip():
-                    QMessageBox.warning(self, "Warning", "Please fill in required fields")
-                    return
-                    
-                branch = Branch(
-                    branch_id=self.id_input.text().strip(),
-                    name=self.name_input.text().strip(),
-                    branch_address=self.address_input.text().strip(),
-                    phone_number=self.phone_input.text().strip()
+                obj = Branch(
+                    branch_id=self.fields['id'].text().strip(),
+                    name=self.fields['name'].text().strip(),
+                    branch_address=self.fields['address'].text().strip(),
+                    phone_number=self.fields['phone'].text().strip()
                 )
-                success = self.master_repo.create_branch(branch)
+                success = self.master_repo.create_branch(obj)
                 
             elif self.data_type == "Shift":
-                if not self.id_input.text().strip() or not self.name_input.text().strip():
-                    QMessageBox.warning(self, "Warning", "Please fill in required fields")
-                    return
-                    
-                shift = Shift(
-                    shift_id=self.id_input.text().strip(),
-                    shift_name=self.name_input.text().strip(),
-                    in_time=self.in_time_input.time().toString("HH:mm"),
-                    out_time=self.out_time_input.time().toString("HH:mm")
+                obj = Shift(
+                    shift_id=self.fields['id'].text().strip(),
+                    shift_name=self.fields['name'].text().strip(),
+                    in_time=self.in_time.time().toString("HH:mm"),
+                    out_time=self.out_time.time().toString("HH:mm")
                 )
-                success = self.master_repo.create_shift(shift)
+                success = self.master_repo.create_shift(obj)
                 
             elif self.data_type == "Holiday":
-                if not self.id_input.text().strip() or not self.name_input.text().strip():
-                    QMessageBox.warning(self, "Warning", "Please fill in required fields")
-                    return
-                    
-                holiday = Holiday(
-                    holiday_id=self.id_input.text().strip(),
-                    holiday_name=self.name_input.text().strip(),
-                    holiday_date=self.date_input.date().toPython()
+                obj = Holiday(
+                    holiday_id=self.fields['id'].text().strip(),
+                    holiday_name=self.fields['name'].text().strip(),
+                    holiday_date=self.date_edit.date().toPython()
                 )
-                success = self.master_repo.create_holiday(holiday)
-            else:
-                success = False
+                success = self.master_repo.create_holiday(obj)
             
             if success:
-                QMessageBox.information(self, "Success", f"{self.data_type} added successfully")
+                QMessageBox.information(self, "Success", f"{self.data_type} saved successfully.")
                 self.accept()
             else:
-                QMessageBox.warning(self, "Error", f"Failed to add {self.data_type.lower()}")
+                QMessageBox.warning(self, "Error", f"Failed to save {self.data_type}. ID might already exist.")
                 
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Error saving item: {str(e)}")
+            QMessageBox.critical(self, "Error", f"An unexpected error occurred: {str(e)}")

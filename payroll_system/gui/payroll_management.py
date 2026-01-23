@@ -123,7 +123,11 @@ class PayrollManagementWidget(QWidget):
         self.table.setColumnWidth(3, 80)   # Year
         self.table.setColumnWidth(4, 120)  # Gross Salary
         self.table.setColumnWidth(5, 120)  # Deductions
-        self.table.setColumnWidth(7, 180)  # Actions
+        
+        # Action column fixed width
+        # self.table.setColumnWidth(7, 180) 
+        self.table.horizontalHeader().setSectionResizeMode(7, QHeaderView.Fixed)
+        self.table.setColumnWidth(7, 80)
         
         layout.addWidget(self.table)
         
@@ -222,15 +226,32 @@ class PayrollManagementWidget(QWidget):
             # Action buttons
             actions_widget = QWidget()
             actions_layout = QHBoxLayout(actions_widget)
-            actions_layout.setContentsMargins(5, 0, 5, 0)
-            actions_layout.setSpacing(10)
+            actions_layout.setContentsMargins(0, 0, 0, 0)
+            actions_layout.setSpacing(6)
             actions_layout.setAlignment(Qt.AlignCenter)
             
             # Delete button
-            delete_btn = QPushButton("Delete")
-            delete_btn.setFixedSize(75, 32)
+            delete_btn = QPushButton("Del")
+            delete_btn.setToolTip("Delete Record")
             delete_btn.setCursor(Qt.PointingHandCursor)
-            delete_btn.setObjectName("DangerButton")
+            delete_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: rgba(239, 68, 68, 0.2); 
+                    color: #ef4444;
+                    border: 1px solid rgba(239, 68, 68, 0.5);
+                    border-radius: 4px;
+                    padding: 0px;
+                    font-weight: 600;
+                    font-size: 11px;
+                    min-height: 24px;
+                    max-width: 40px;
+                    width: 40px;
+                }
+                QPushButton:hover {
+                    background-color: rgba(239, 68, 68, 0.8);
+                    color: white;
+                }
+            """)
             delete_btn.clicked.connect(lambda checked: self.delete_payroll())
             
             actions_layout.addWidget(delete_btn)

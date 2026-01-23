@@ -88,7 +88,7 @@ class AttendanceManagementWidget(QWidget):
         header.setStretchLastSection(False)
         header.setSectionResizeMode(QHeaderView.Stretch)
         header.setSectionResizeMode(4, QHeaderView.Fixed)
-        self.table.setColumnWidth(4, 250)
+        self.table.setColumnWidth(4, 150) # Reduced from 250 as buttons are smaller
         
         header.setDefaultAlignment(Qt.AlignLeft)
         
@@ -165,15 +165,33 @@ class AttendanceManagementWidget(QWidget):
                 # Action buttons
                 actions_widget = QWidget()
                 actions_layout = QHBoxLayout(actions_widget)
-                actions_layout.setContentsMargins(5, 0, 5, 0)
-                actions_layout.setSpacing(12)
+                actions_layout.setContentsMargins(0, 0, 0, 0)
+                actions_layout.setSpacing(6)
                 actions_layout.setAlignment(Qt.AlignCenter)
                 
                 if att.status != "LOP":
-                    lop_btn = QPushButton("Mark Loss")
+                    lop_btn = QPushButton("LOP")
+                    lop_btn.setToolTip("Mark Loss of Pay")
                     lop_btn.setCursor(Qt.PointingHandCursor)
-                    lop_btn.setObjectName("WarningButton")
-                    lop_btn.setFixedSize(100, 32) # Standardize size
+                    # Warning style (Amber)
+                    lop_btn.setStyleSheet("""
+                        QPushButton {
+                            background-color: rgba(245, 158, 11, 0.2); 
+                            color: #f59e0b;
+                            border: 1px solid rgba(245, 158, 11, 0.5);
+                            border-radius: 4px;
+                            padding: 0px;
+                            font-weight: 600;
+                            font-size: 11px;
+                            min-height: 24px;
+                            max-width: 40px;
+                            width: 40px;
+                        }
+                        QPushButton:hover {
+                            background-color: rgba(245, 158, 11, 0.8);
+                            color: white;
+                        }
+                    """)
                     lop_btn.clicked.connect(lambda checked, eid=employee_id, d=att_date: 
                                            self.mark_lop(eid, d))
                     actions_layout.addWidget(lop_btn)
@@ -181,9 +199,25 @@ class AttendanceManagementWidget(QWidget):
                 # Delete button
                 delete_btn = QPushButton("Del")
                 delete_btn.setToolTip("Delete Record")
-                delete_btn.setFixedSize(60, 32)
                 delete_btn.setCursor(Qt.PointingHandCursor)
-                delete_btn.setObjectName("DangerButton")
+                delete_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: rgba(239, 68, 68, 0.2); 
+                        color: #ef4444;
+                        border: 1px solid rgba(239, 68, 68, 0.5);
+                        border-radius: 4px;
+                        padding: 0px;
+                        font-weight: 600;
+                        font-size: 11px;
+                        min-height: 24px;
+                        max-width: 40px;
+                        width: 40px;
+                    }
+                    QPushButton:hover {
+                        background-color: rgba(239, 68, 68, 0.8);
+                        color: white;
+                    }
+                """)
                 delete_btn.clicked.connect(lambda checked, eid=employee_id, d=att_date: 
                                            self.delete_attendance(eid, d))
                 actions_layout.addWidget(delete_btn)
