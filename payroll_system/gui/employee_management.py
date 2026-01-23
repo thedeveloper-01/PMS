@@ -402,20 +402,8 @@ class EmployeeDialog(QDialog):
         self.name_input = QLineEdit()
         form.addRow("Name:", self.name_input)
 
-        self.email_input = QLineEdit()
-        form.addRow("Email:", self.email_input)
-
-        self.password_input = QLineEdit()
-        self.password_input.setEchoMode(QLineEdit.Password)
-        if self.employee:
-            self.password_input.setPlaceholderText("Leave empty to keep current password")
-        form.addRow("Password:", self.password_input)
-
         self.mobile_input = QLineEdit()
         form.addRow("Mobile:", self.mobile_input)
-
-        self.location_input = QLineEdit()
-        form.addRow("Location:", self.location_input)
 
         self.salary_input = QDoubleSpinBox()
         self.salary_input.setMaximum(9999999)
@@ -450,11 +438,7 @@ class EmployeeDialog(QDialog):
             self.branch_combo.addItem(b.name, b.branch_id)
         form.addRow("Branch:", self.branch_combo)
 
-        self.role_combo = QComboBox()
-        self.role_combo.addItem("Employee", ROLE_EMPLOYEE)
-        self.role_combo.addItem("HR", ROLE_HR)
-        self.role_combo.addItem("Admin", ROLE_ADMIN)
-        form.addRow("Role:", self.role_combo)
+
 
         layout.addLayout(form)
 
@@ -476,9 +460,7 @@ class EmployeeDialog(QDialog):
     def load_employee_data(self):
         self.employee_id_input.setText(self.employee.employee_id)
         self.name_input.setText(self.employee.employee_name)
-        self.email_input.setText(self.employee.email)
         self.mobile_input.setText(str(self.employee.mobile_number))
-        self.location_input.setText(self.employee.location)
         self.salary_input.setValue(self.employee.basic_salary)
         self.bank_input.setText(self.employee.bank_account_number)
         self.pan_input.setText(self.employee.pan_number)
@@ -493,20 +475,16 @@ class EmployeeDialog(QDialog):
         self.branch_combo.setCurrentIndex(
             self.branch_combo.findData(self.employee.branch_id)
         )
-        self.role_combo.setCurrentIndex(
-            self.role_combo.findData(self.employee.role)
-        )
+
 
     def save_employee(self):
         data = {
             'employee_id': self.employee_id_input.text().strip(),
             'employee_name': self.name_input.text().strip(),
-            'email': self.email_input.text().strip(),
-            'password': self.password_input.text().strip() or (
-                self.employee.password if self.employee else ''
-            ),
+            'email': self.employee.email if self.employee else "", # hidden
+            'password': self.employee.password if self.employee else "", # hidden
             'mobile_number': self.mobile_input.text().strip(),
-            'location': self.location_input.text().strip(),
+            'location': self.employee.location if self.employee else "", # hidden
             'basic_salary': self.salary_input.value(),
             'bank_account_number': self.bank_input.text().strip(),
             'pan_number': self.pan_input.text().strip().upper(),
@@ -514,13 +492,11 @@ class EmployeeDialog(QDialog):
             'department_id': self.dept_combo.currentData(),
             'designation_id': self.designation_combo.currentData(),
             'branch_id': self.branch_combo.currentData(),
-            'role': self.role_combo.currentData(),
+            'role': self.employee.role if self.employee else ROLE_EMPLOYEE,
         }
 
         # Validation
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", data['email']):
-            QMessageBox.warning(self, "Validation Error", "Please enter a valid email address.")
-            return
+
 
         if not re.match(r"^\d{10}$", data['mobile_number']):
             QMessageBox.warning(self, "Validation Error", "Mobile number must be exactly 10 digits.")

@@ -468,3 +468,22 @@ NameError: name 'background' is not defined
 2026-01-23 20:08:51,380 - payroll_system.utils.database - INFO - Database indexes created successfully
 2026-01-23 20:08:51,381 - payroll_system.main - INFO - Database connected successfully
 2026-01-23 20:08:51,594 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 20:13:41,908 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 20:13:42,391 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 20:13:42,391 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 20:13:42,549 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 21:24:21,709 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 21:24:22,071 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 21:24:22,072 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 21:24:22,196 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 21:30:53,261 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-23 21:31:02,439 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 21:31:02,829 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 21:31:02,829 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 21:31:02,933 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 21:41:22,879 - payroll_system.utils.database - INFO - Disconnected from MongoDB
+2026-01-23 21:41:31,693 - payroll_system.utils.database - INFO - Connected to MongoDB via MONGODB_URI
+2026-01-23 21:41:32,038 - payroll_system.utils.database - INFO - Database indexes created successfully
+2026-01-23 21:41:32,039 - payroll_system.main - INFO - Database connected successfully
+2026-01-23 21:41:32,158 - payroll_system.main - INFO - Default admin already exists
+2026-01-23 21:54:44,703 - payroll_system.utils.database - INFO - Disconnected from MongoDB

@@ -141,7 +141,7 @@ class MasterDataTableWidget(QWidget):
         elif self.data_type == "Designation":
             return ["ID", "Name", "Department"]
         elif self.data_type == "Branch":
-            return ["ID", "Name", "Address", "Phone"]
+            return ["ID", "Name", "Address", "Phone", "Email"]
         elif self.data_type == "Shift":
             return ["ID", "Name", "In Time", "Out Time"]
         elif self.data_type == "Holiday":
@@ -181,11 +181,19 @@ class MasterDataTableWidget(QWidget):
                     
                 elif self.data_type == "Designation":
                     id_val = item.designation_id
-                    data = [item.designation_id, item.designation_name, getattr(item, 'department_name', 'N/A')]
+                    dept_name = "N/A"
+                    if hasattr(item, 'department_id') and item.department_id:
+                        dept = self.master_repo.get_department(item.department_id)
+                        if dept:
+                            dept_name = dept.department_name
+                    elif hasattr(item, 'department_name'):
+                        dept_name = item.department_name
+                        
+                    data = [item.designation_id, item.designation_name, dept_name]
                     
                 elif self.data_type == "Branch":
                     id_val = item.branch_id
-                    data = [item.branch_id, item.name, item.branch_address, item.phone_number]
+                    data = [item.branch_id, item.name, item.branch_address, item.phone_number, item.email]
                     
                 elif self.data_type == "Shift":
                     id_val = item.shift_id
@@ -329,6 +337,7 @@ class MasterDataDialog(QDialog):
             self.add_field(form_layout, "name", "Branch Name")
             self.add_field(form_layout, "address", "Address")
             self.add_field(form_layout, "phone", "Phone Number")
+            self.add_field(form_layout, "email", "Email")
             
         elif self.data_type == "Shift":
             self.add_field(form_layout, "id", "Shift ID")
@@ -413,7 +422,8 @@ class MasterDataDialog(QDialog):
                     branch_id=self.fields['id'].text().strip(),
                     name=self.fields['name'].text().strip(),
                     branch_address=self.fields['address'].text().strip(),
-                    phone_number=self.fields['phone'].text().strip()
+                    phone_number=self.fields['phone'].text().strip(),
+                    email=self.fields['email'].text().strip()
                 )
                 success = self.master_repo.create_branch(obj)
                 

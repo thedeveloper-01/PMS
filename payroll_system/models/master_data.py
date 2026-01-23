@@ -26,10 +26,10 @@ class Designation:
     """Designation model"""
     
     def __init__(self, designation_id: str, designation_name: str, 
-                 department_name: str, **kwargs):
+                 department_id: str, **kwargs):
         self.designation_id = designation_id
         self.designation_name = designation_name
-        self.department_name = department_name
+        self.department_id = department_id
         self.created_date = kwargs.get('created_date', datetime.now().date())
         self.modified_date = kwargs.get('modified_date', datetime.now().date())
         self.status = kwargs.get('status', 1)
@@ -38,7 +38,7 @@ class Designation:
         return {
             'designation_id': self.designation_id,
             'designation_name': self.designation_name,
-            'department_name': self.department_name,
+            'department_id': self.department_id,
             'created_date': self.created_date.isoformat() if isinstance(self.created_date, date) else str(self.created_date),
             'modified_date': self.modified_date.isoformat() if isinstance(self.modified_date, date) else str(self.modified_date),
             'status': self.status
